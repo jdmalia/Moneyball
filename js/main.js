@@ -133,8 +133,8 @@ d3.csv("../data/nba.csv", function(error, data) {
 		.call(position)
 		.style("background", function(d) { return d.children ?  null: color(d['Division']) ; })
 		.text(function(d) { return d.children ? null : d["Team"]; })
+		.attr("id", function(d) { return d.children ? null : "tm"+d["Team"]; } )
 		.on("mouseover", function(d) {
-			console.log("#"+d[season+"Salary"]);
 			tooltip.transition()
                .duration(200)
                .style("opacity", 1)
@@ -143,9 +143,9 @@ d3.csv("../data/nba.csv", function(error, data) {
 			   .style("height", "auto");
           tooltip.html("<b>\t" + d["Team"] + "</b><br/>\t  Salary: <b>" + curr_fmt(xValue(d)*1000000)
 	        + "</b><br/>\t  Wins: <b>" + yValue(d) + "</b>; Losses: <b>" + d[season+"Loss"] + "</b>")
-               .style("left",  d[season+"Salary"] ? (document.getElementById(d[season+"Salary"]).getBoundingClientRect().left + 10) + "px": 
+               .style("left",  d["Team"] ? (document.getElementById("sp"+d["Team"]).getBoundingClientRect().left + 10) + "px": 
 			   (d3.event.pageX + 5) + "px")
-               .style("top", d[season+"Salary"] ? (document.getElementById(d[season+"Salary"]).getBoundingClientRect().top - 23) + "px": (d3.event.pageY - 28) + "px")
+               .style("top", d["Team"] ? (document.getElementById("sp"+d["Team"]).getBoundingClientRect().top - 23) + "px": (d3.event.pageY - 28) + "px")
 			   .style("padding", "5px")
 			   .style("padding-left", "10px")})
       .on("mouseout", function(d) {
@@ -207,13 +207,15 @@ d3.csv("../data/nba.csv", function(error, data) {
   svg.selectAll(".dot")
       .data(data)
     .enter().append("circle")
-	  .attr("id", function(d) {return d[season+"Salary"];})
+	  .attr("id", function(d) {return "sp"+d["Team"];})
       .attr("class", "dot")
       .attr("r", 3.5)
       .attr("cx", xMap)
       .attr("cy", yMap)
       .style("fill", function(d) { return color(cValue(d));}) 
       .on("mouseover", function(d) {
+		  document.getElementById("tm"+d["Team"]).style.border = "1px solid black";
+		  document.getElementById("tm"+d["Team"]).style.zIndex = "100000";
           tooltip.transition()
                .duration(200)
                .style("opacity", 1)
@@ -228,6 +230,8 @@ d3.csv("../data/nba.csv", function(error, data) {
 			   .style("padding-left", "10px");
       })
       .on("mouseout", function(d) {
+		 document.getElementById("tm"+d["Team"]).style.border = "1px solid white";
+		 document.getElementById("tm"+d["Team"]).style.zIndex = "initial";
          tooltip.transition()
                .duration(500)
                .style("opacity", 0);
