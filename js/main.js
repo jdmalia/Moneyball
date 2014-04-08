@@ -6,6 +6,7 @@ var margin = {top: 40, right: 20, bottom: 30, left: 40},
     width = 650 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
+	
 /* 
  * value accessor - returns the value to encode for a given data object.
  * scale - maps value to a visual display encoding, such as a pixel position.

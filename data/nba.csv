@@ -1,1 +1,31 @@
-Team,Division,Conference,01-02 Salary,01-02 Win,01-02 Loss,02-03 Salary,02-03 Win,02-03 LossBoston Celtics          ,Atlantic,Eastern,47469112,49,33,52423200,44,38Brooklyn Nets,Atlantic,Eastern,75172371,52,30,60350424,49,33New York Knicks         ,Atlantic,Eastern,85457889,30,52,93452376,37,45Philadelphia 76ers      ,Atlantic,Eastern,58073366,43,39,64822488,48,34Toronto Raptors         ,Atlantic,Eastern,52282161,42,40,55067512,24,58Chicago Bulls           ,Central,Eastern,42592857,21,61,44468592,30,52Cleveland Cavaliers     ,Central,Eastern,45649974,29,53,49610440,17,65Detroit Pistons         ,Central,Eastern,42355177,50,32,47777892,50,32Indiana Pacers          ,Central,Eastern,53211121,42,40,53347324,48,34Milwaukee Bucks         ,Central,Eastern,56224266,41,41,57995152,42,40Atlanta Hawks           ,Southeast,Eastern,51179169,33,49,55620088,35,47Charlotte Bobcats,Southeast,Eastern,0,0,0,0,0,0Miami Heat              ,Southeast,Eastern,52605146,36,46,57378320,25,57Orlando Magic           ,Southeast,Eastern,45796501,44,38,50042784,42,40Washington Wizards      ,Southeast,Eastern,54776087,37,45,46298624,37,45Denver Nuggets          ,Northwest,West,54426938,27,55,49056548,17,65Minnesota Timberwolves  ,Northwest,West,54559632,50,32,58473004,51,31Oklahoma City Thunder,Northwest,West,45431733,45,37,53167480,40,42Portland Trailblazers   ,Northwest,West,83758700,49,33,105203088,50,32Utah Jazz               ,Northwest,West,52642362,44,38,49897044,47,35Golden State Warriors   ,Pacific,West,47681152,21,61,47737716,38,44Los Angeles Clippers    ,Pacific,West,33849932,39,43,42768280,37,55Los Angeles Lakers      ,Pacific,West,53458686,58,24,62758616,50,32Phoenix Suns            ,Pacific,West,56187219,36,46,54544540,44,38Sacramento Kings        ,Pacific,West,54921012,61,21,70114984,59,23Dallas Mavericks        ,Southwest,West,57363430,57,25,72155176,60,22Houston Rockets         ,Southwest,West,49168169,28,54,50181240,43,39Memphis Grizzlies       ,Southwest,West,50920631,23,59,61009168,28,54New Orleans Hornets       ,Southwest,West,49999445,44,38,44458880,47,35San Antonio Spurs       ,Southwest,West,45719814,58,24,52789992,60,22
+Team,Division,Conference,01-02 Salary,01-02 Win,01-02 Loss,02-03 Salary,02-03 Win,02-03 Loss,03-04 Salary,03-04 Win,03-04 Loss,04-05 Salary,04-05 Win,04-05 Loss,05-06 Salary,05-06 Win,05-06 Loss,06-07 Salary,06-07 Win,06-07 Loss,07-08 Salary,07-08 Win,07-08 Loss,08-09 Salary,08-09 Win,08-09 Loss,09-10 Salary,09-10 Win,09-10 Loss,10-11 Salary,10-11 Win,10-11 Loss,11-12 Salary,11-12 Win,11-12 Loss,12-13 Salary,12-13 Win,12-13 Loss
+Boston Celtics          ,Atlantic,Eastern,47469112,49,33,52423200,44,38,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Brooklyn Nets,Atlantic,Eastern,75172371,52,30,60350424,49,33,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+New York Knicks         ,Atlantic,Eastern,85457889,30,52,93452376,37,45,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Philadelphia 76ers      ,Atlantic,Eastern,58073366,43,39,64822488,48,34,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Toronto Raptors         ,Atlantic,Eastern,52282161,42,40,55067512,24,58,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Chicago Bulls           ,Central,Eastern,42592857,21,61,44468592,30,52,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Cleveland Cavaliers     ,Central,Eastern,45649974,29,53,49610440,17,65,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Detroit Pistons         ,Central,Eastern,42355177,50,32,47777892,50,32,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Indiana Pacers          ,Central,Eastern,53211121,42,40,53347324,48,34,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Milwaukee Bucks         ,Central,Eastern,56224266,41,41,57995152,42,40,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Atlanta Hawks           ,Southeast,Eastern,51179169,33,49,55620088,35,47,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Charlotte Bobcats,Southeast,Eastern,0,0,0,0,0,0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Miami Heat              ,Southeast,Eastern,52605146,36,46,57378320,25,57,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Orlando Magic           ,Southeast,Eastern,45796501,44,38,50042784,42,40,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Washington Wizards      ,Southeast,Eastern,54776087,37,45,46298624,37,45,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Denver Nuggets          ,Northwest,West,54426938,27,55,49056548,17,65,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Minnesota Timberwolves  ,Northwest,West,54559632,50,32,58473004,51,31,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Oklahoma City Thunder,Northwest,West,45431733,45,37,53167480,40,42,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Portland Trailblazers   ,Northwest,West,83758700,49,33,105203088,50,32,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Utah Jazz               ,Northwest,West,52642362,44,38,49897044,47,35,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Golden State Warriors   ,Pacific,West,47681152,21,61,47737716,38,44,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Los Angeles Clippers    ,Pacific,West,33849932,39,43,42768280,37,55,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Los Angeles Lakers      ,Pacific,West,53458686,58,24,62758616,50,32,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Phoenix Suns            ,Pacific,West,56187219,36,46,54544540,44,38,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Sacramento Kings        ,Pacific,West,54921012,61,21,70114984,59,23,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Dallas Mavericks        ,Southwest,West,57363430,57,25,72155176,60,22,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Houston Rockets         ,Southwest,West,49168169,28,54,50181240,43,39,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Memphis Grizzlies       ,Southwest,West,50920631,23,59,61009168,28,54,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+New Orleans Pelicans       ,Southwest,West,49999445,44,38,44458880,47,35,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+San Antonio Spurs       ,Southwest,West,45719814,58,24,52789992,60,22,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,

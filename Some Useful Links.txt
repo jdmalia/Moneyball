@@ -1,0 +1,3 @@
+Slider: https://github.com/turban/d3.slider
+
+view-source:http://www.biostat.wisc.edu/~kbroman/D3/slide_scatter.html
