@@ -39,11 +39,6 @@ h2 {
   text-indent: 2px;
 }
 
-.node:hover {
-	border: 1px solid black;
-	z-index: 50000;
-}
-
 #tm_vis {
 	float:right;
 }

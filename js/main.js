@@ -135,6 +135,8 @@ d3.csv("../data/nba.csv", function(error, data) {
 		.text(function(d) { return d.children ? null : d["Team"]; })
 		.attr("id", function(d) { return d.children ? null : "tm"+d["Team"]; } )
 		.on("mouseover", function(d) {
+			document.getElementById("tm"+d["Team"]).style.border = "1px solid black";
+		    document.getElementById("tm"+d["Team"]).style.zIndex = "50000";
 			tooltip.transition()
                .duration(200)
                .style("opacity", 1)
@@ -149,6 +151,8 @@ d3.csv("../data/nba.csv", function(error, data) {
 			   .style("padding", "5px")
 			   .style("padding-left", "10px")})
       .on("mouseout", function(d) {
+		  document.getElementById("tm"+d["Team"]).style.border = "1px solid white";
+		  document.getElementById("tm"+d["Team"]).style.zIndex = "40000";
           tooltip.transition()
                .duration(500)
                .style("opacity", 0);
@@ -215,7 +219,7 @@ d3.csv("../data/nba.csv", function(error, data) {
       .style("fill", function(d) { return color(cValue(d));}) 
       .on("mouseover", function(d) {
 		  document.getElementById("tm"+d["Team"]).style.border = "1px solid black";
-		  document.getElementById("tm"+d["Team"]).style.zIndex = "100000";
+		  document.getElementById("tm"+d["Team"]).style.zIndex = "50000";
           tooltip.transition()
                .duration(200)
                .style("opacity", 1)
@@ -231,7 +235,7 @@ d3.csv("../data/nba.csv", function(error, data) {
       })
       .on("mouseout", function(d) {
 		 document.getElementById("tm"+d["Team"]).style.border = "1px solid white";
-		 document.getElementById("tm"+d["Team"]).style.zIndex = "initial";
+		 document.getElementById("tm"+d["Team"]).style.zIndex = "40000";
          tooltip.transition()
                .duration(500)
                .style("opacity", 0);
