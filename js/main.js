@@ -29,8 +29,8 @@ var yValue = function(d) { return d[season+"Win"];}, // data -> value
 
 // setup fill color
 var cValue = function(d) { return d.Division;},
-    colorTM = d3.scale.category10(),
-	colorSP = d3.scale.category10();
+    color = d3.scale.ordinal().range(["#fbb4ae","#b3cde3","#ccebc5","#decbe4","#fed9a6","#ffffcc"]);
+	//colorSP = d3.scale.ordinal().range(["#fbb4ae","#b3cde3","#ccebc5","#decbe4","#fed9a6","#ffffcc"]);
 
 // add the sp graph canvas to its appropriate div
 var svg = d3.select("#sp_vis").append("svg")
@@ -67,10 +67,10 @@ d3.csv("../data/nba.csv", function(error, data) {
 	
    // getting data for scatterplot
 	data.forEach(function(d) {
-	  d["01-02 Salary"] = +d["01-02 Salary"]/1000000;
+	  d["01-02 Salary"] = (+d["01-02 Salary"])/1000000;
 	  d["01-02 Win"] = +d["01-02 Win"];
 	  d["01-02 Loss"] = +d["01-02 Loss"];
-	  d["02-03 Salary"] = +d["02-03 Salary"]/1000000;
+	  d["02-03 Salary"] = (+d["02-03 Salary"])/1000000;
 	  d["02-03 Win"] = +d["02-03 Win"];
 	  d["02-03 Loss"] = +d["02-03 Loss"];
 	//    d.Calories = +d.Calories;
@@ -131,11 +131,35 @@ d3.csv("../data/nba.csv", function(error, data) {
 	.enter().append("div")
 		.attr("class", "node")
 		.call(position)
-		.style("background", function(d) { return d.children ? colorTM(d.name) : null; })
-		.text(function(d) { return d.children ? null : d["Team"]; });
+		.style("background", function(d) { return d.children ?  null: color(d['Division']) ; })
+		.text(function(d) { return d.children ? null : d["Team"]; })
+		.attr("id", function(d) { return d.children ? null : "tm"+d["Team"]; } )
+		.on("mouseover", function(d) {
+			document.getElementById("tm"+d["Team"]).style.border = "1px solid black";
+		    document.getElementById("tm"+d["Team"]).style.zIndex = "50000";
+			tooltip.transition()
+               .duration(200)
+               .style("opacity", 1)
+			   .style("background", "#FFFFFF")
+			   .style("max-width", "140px")
+			   .style("height", "auto");
+          tooltip.html("<b>\t" + d["Team"] + "</b><br/>\t  Salary: <b>" + curr_fmt(xValue(d)*1000000)
+	        + "</b><br/>\t  Wins: <b>" + yValue(d) + "</b>; Losses: <b>" + d[season+"Loss"] + "</b>")
+               .style("left",  d["Team"] ? (document.getElementById("sp"+d["Team"]).getBoundingClientRect().left + 10) + "px": 
+			   (d3.event.pageX + 5) + "px")
+               .style("top", d["Team"] ? (document.getElementById("sp"+d["Team"]).getBoundingClientRect().top - 23) + "px": (d3.event.pageY - 28) + "px")
+			   .style("padding", "5px")
+			   .style("padding-left", "10px")})
+      .on("mouseout", function(d) {
+		  document.getElementById("tm"+d["Team"]).style.border = "1px solid white";
+		  document.getElementById("tm"+d["Team"]).style.zIndex = "40000";
+          tooltip.transition()
+               .duration(500)
+               .style("opacity", 0);
+      });
 		
 	d3.selectAll("input").on("change", function change() {
-		var value = this.value === "count"
+		var value = this.value == "count"
 			? function() { return 1; }
 			: function(d) { return d[season+"Salary"]; };
 
@@ -156,8 +180,8 @@ d3.csv("../data/nba.csv", function(error, data) {
 	}
   
   /* ---------------------------SCATTERPLOT------------------------------ */
-  xScale.domain([30, 100]);
-  yScale.domain([d3.min(data, yValue)-1, d3.max(data, yValue)+1]);
+  xScale.domain([30, 120]);
+  yScale.domain([d3.min(data, yValue), d3.max(data, yValue)]);
 
   // x-axis
   svg.append("g")
@@ -187,12 +211,15 @@ d3.csv("../data/nba.csv", function(error, data) {
   svg.selectAll(".dot")
       .data(data)
     .enter().append("circle")
+	  .attr("id", function(d) {return "sp"+d["Team"];})
       .attr("class", "dot")
       .attr("r", 3.5)
       .attr("cx", xMap)
       .attr("cy", yMap)
-      .style("fill", function(d) { return colorSP(cValue(d));}) 
+      .style("fill", function(d) { return color(cValue(d));}) 
       .on("mouseover", function(d) {
+		  document.getElementById("tm"+d["Team"]).style.border = "1px solid black";
+		  document.getElementById("tm"+d["Team"]).style.zIndex = "50000";
           tooltip.transition()
                .duration(200)
                .style("opacity", 1)
@@ -207,14 +234,17 @@ d3.csv("../data/nba.csv", function(error, data) {
 			   .style("padding-left", "10px");
       })
       .on("mouseout", function(d) {
-          tooltip.transition()
+		 document.getElementById("tm"+d["Team"]).style.border = "1px solid white";
+		 document.getElementById("tm"+d["Team"]).style.zIndex = "40000";
+         tooltip.transition()
                .duration(500)
                .style("opacity", 0);
+			   
       });
 
   // draw legend
   var legend = svg.selectAll(".legend")
-      .data(colorSP.domain())
+      .data(color.domain())
     .enter().append("g")
       .attr("class", "legend")
       .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
@@ -224,7 +254,7 @@ d3.csv("../data/nba.csv", function(error, data) {
       .attr("x", width - 18)
       .attr("width", 18)
       .attr("height", 18)
-      .style("fill", colorSP);
+      .style("fill", color);
 
   // draw legend text
   legend.append("text")
