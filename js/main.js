@@ -135,24 +135,28 @@ d3.csv("../data/nba.csv", function(error, data) {
 		.text(function(d) { return d.children ? null : d["Team"]; })
 		.attr("id", function(d) { return d.children ? null : "tm"+d["Team"]; } )
 		.on("mouseover", function(d) {
-			document.getElementById("tm"+d["Team"]).style.border = "1px solid black";
-		    document.getElementById("tm"+d["Team"]).style.zIndex = "50000";
+			document.getElementById("tm"+d.Team).style.border = "1px solid black";
+		    document.getElementById("tm"+d.Team).style.zIndex = "40000";
+			document.getElementById("sp"+d.Team).setAttribute("r", 7);
+			document.getElementById("sp"+d.Team).style.zIndex = "100000";
 			tooltip.transition()
                .duration(200)
                .style("opacity", 1)
 			   .style("background", "#FFFFFF")
 			   .style("max-width", "140px")
 			   .style("height", "auto");
-          tooltip.html("<b>\t" + d["Team"] + "</b><br/>\t  Salary: <b>" + curr_fmt(xValue(d)*1000000)
+          tooltip.html("<b>" + d["Team"] + "</b><br/>\t  Salary: <b>" + curr_fmt(xValue(d)*1000000)
 	        + "</b><br/>\t  Wins: <b>" + yValue(d) + "</b>; Losses: <b>" + d[season+"Loss"] + "</b>")
-               .style("left",  d["Team"] ? (document.getElementById("sp"+d["Team"]).getBoundingClientRect().left + 10) + "px": 
+               .style("left",  d["Team"] ? (document.getElementById("sp"+d["Team"]).getBoundingClientRect().left + 16) + "px": 
 			   (d3.event.pageX + 5) + "px")
-               .style("top", d["Team"] ? (document.getElementById("sp"+d["Team"]).getBoundingClientRect().top - 23) + "px": (d3.event.pageY - 28) + "px")
+               .style("top", d["Team"] ? (document.getElementById("sp"+d["Team"]).getBoundingClientRect().top - 18) + "px": (d3.event.pageY - 28) + "px")
 			   .style("padding", "5px")
 			   .style("padding-left", "10px")})
       .on("mouseout", function(d) {
+		  document.getElementById("sp"+d.Team).setAttribute("r", 3.5);
+		  document.getElementById("sp"+d.Team).style.zIndex = "30000";
 		  document.getElementById("tm"+d["Team"]).style.border = "1px solid white";
-		  document.getElementById("tm"+d["Team"]).style.zIndex = "40000";
+		  document.getElementById("tm"+d["Team"]).style.zIndex = "20000";
           tooltip.transition()
                .duration(500)
                .style("opacity", 0);
@@ -218,6 +222,7 @@ d3.csv("../data/nba.csv", function(error, data) {
       .attr("cy", yMap)
       .style("fill", function(d) { return color(cValue(d));}) 
       .on("mouseover", function(d) {
+		  document.getElementById("sp"+d.Team).setAttribute("r", 7);
 		  document.getElementById("tm"+d["Team"]).style.border = "1px solid black";
 		  document.getElementById("tm"+d["Team"]).style.zIndex = "50000";
           tooltip.transition()
@@ -226,18 +231,19 @@ d3.csv("../data/nba.csv", function(error, data) {
 			   .style("background", "#FFFFFF")
 			   .style("max-width", "140px")
 			   .style("height", "auto");
-          tooltip.html("<b>\t" + d["Team"] + "</b><br/>\t  Salary: <b>" + curr_fmt(xValue(d)*1000000)
+          tooltip.html("<b>" + d["Team"] + "</b><br/>\t  Salary: <b>" + curr_fmt(xValue(d)*1000000)
 	        + "</b><br/>\t  Wins: <b>" + yValue(d) + "</b>; Losses: <b>" + d[season+"Loss"] + "</b>")
-               .style("left", (d3.event.pageX + 5) + "px")
-               .style("top", (d3.event.pageY - 28) + "px")
+               .style("left", (d3.event.pageX + 10) + "px")
+               .style("top", (d3.event.pageY - 25) + "px")
 			   .style("padding", "5px")
 			   .style("padding-left", "10px");
       })
       .on("mouseout", function(d) {
+		 document.getElementById("sp"+d.Team).setAttribute("r", 3.5);
 		 document.getElementById("tm"+d["Team"]).style.border = "1px solid white";
 		 document.getElementById("tm"+d["Team"]).style.zIndex = "40000";
          tooltip.transition()
-               .duration(500)
+               .duration(200)
                .style("opacity", 0);
 			   
       });
