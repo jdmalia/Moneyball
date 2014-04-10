@@ -12,7 +12,7 @@ var margin = {top: 40, right: 20, bottom: 30, left: 40},
  * map function - maps from data value to display value
  * axis - sets up axis
  */ 
-var season = "02-03 ";
+var season = "05-06 ";
 
 // setup x 
 var xValue = function(d) { return d[season+"Salary"];}, // data -> value
@@ -67,15 +67,14 @@ d3.csv("../data/nba.csv", function(error, data) {
 	
    // getting data for scatterplot
 	data.forEach(function(d) {
-	  d["01-02 Salary"] = (+d["01-02 Salary"])/1000000;
-	  d["01-02 Win"] = +d["01-02 Win"];
-	  d["01-02 Loss"] = +d["01-02 Loss"];
-	  d["02-03 Salary"] = (+d["02-03 Salary"])/1000000;
-	  d["02-03 Win"] = +d["02-03 Win"];
-	  d["02-03 Loss"] = +d["02-03 Loss"];
-	//    d.Calories = +d.Calories;
-	//    d["Protein (g)"] = +d["Protein (g)"];
-	//    console.log(d);
+	  for (i = 1; i < 13; ++i) {
+	  salary = sprintf("%02d-%02d Salary", i, i+1);
+	  win = sprintf("%02d-%02d Win", i, i+1);
+	  loss = sprintf("%02d-%02d Loss", i, i+1);
+	  d[salary] = (+d[salary])/1000000;
+	  d[win] = +d[win];
+	  d[loss] = +d[loss];	  
+	  }
 	});
 
 
@@ -184,8 +183,8 @@ d3.csv("../data/nba.csv", function(error, data) {
 	}
   
   /* ---------------------------SCATTERPLOT------------------------------ */
-  xScale.domain([30, 120]);
-  yScale.domain([d3.min(data, yValue), d3.max(data, yValue)]);
+  xScale.domain([30, 130]);
+  yScale.domain([0, 70]);
 
   // x-axis
   svg.append("g")

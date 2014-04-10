@@ -41,10 +41,21 @@ h2 {
   text-indent: 2px;
 }
 
+#viz_container {
+	position: retlative;
+	width: 1340px;
+	display:block;
+	text-align: center;
+	margin-right: auto;
+	margin-left: auto;
+}
+
 #tm_vis {
-	float:right;
+	float: left;
+	margin-left: 10px;
 }
 
 #sp_vis {
-	float:left;
-}
+	float: left;
+	margin-right: 10px;
+	}
