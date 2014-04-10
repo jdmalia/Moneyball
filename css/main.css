@@ -45,7 +45,6 @@ h2 {
 	position: relative;
 	width: 1340px;
 	display:block;
-	text-align: center;
 	margin-right: auto;
 	margin-left: auto;
 	
@@ -59,4 +58,4 @@ h2 {
 #sp_vis {
 	float: left;
 	margin-right: 10px;
-	}
+}
