@@ -42,12 +42,13 @@ h2 {
 }
 
 #viz_container {
-	position: retlative;
+	position: relative;
 	width: 1340px;
 	display:block;
 	text-align: center;
 	margin-right: auto;
 	margin-left: auto;
+	
 }
 
 #tm_vis {
