@@ -131,7 +131,7 @@ d3.csv("../data/nba.csv", function(error, data) {
 
  cell.append("svg:text")
       .attr("x", function(d) { return 5; })
-      .attr("y", function(d) { return 19; })
+      .attr("y", function(d) { return 10; })
      .attr("dy", ".35em")
       .text(function(d) { return d["Team"]; });
      // .style("opacity", function(d) { d.w = this.getComputedTextLength(); return d.dx > d.w ? 1 : 0; });
