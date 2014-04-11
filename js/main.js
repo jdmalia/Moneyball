@@ -38,7 +38,7 @@ var yValue = function(d) { return d[season+"Win"];}, // data -> value
 
 // setup fill color
 var cValue = function(d) { return d.Division;},
-    color = d3.scale.ordinal().range(["#fbb4ae","#b3cde3","#ccebc5","#decbe4","#fed9a6","#ffffcc"]);
+    color = d3.scale.ordinal().range(["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462"]);
 
 // add the sp graph canvas to its appropriate div
 var svg = d3.select("#sp_vis").append("svg")
@@ -48,16 +48,6 @@ var svg = d3.select("#sp_vis").append("svg")
    .append("g")
      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 	
-
-// add tm graph canvas to its appropriate div
-/*var div2 = d3.select("#tm_vis").append("div")
-    .style("position", "relative")
-	.style("float", "right")
-    .style("width", (width + margin.left + margin.right) + "px")
-    .style("height", (height + margin.top + margin.bottom) + "px")
-    .style("left", margin.left + "px")
-    .style("top", margin.top + "px");
-	*/
 var div2 = d3.select("#tm_vis").append("div")
     .attr("class", "chart")
     .style("width", (width + margin.left + margin.right) + "px")
