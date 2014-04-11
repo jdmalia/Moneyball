@@ -10,6 +10,8 @@ var margin = {top: 40, right: 20, bottom: 30, left: 40},
 	
 var x_root, x_node;
 
+var zoomed = false;
+
 /* 
  * value accessor - returns the value to encode for a given data object.
  * scale - maps value to a visual display encoding, such as a pixel position.
@@ -133,8 +135,8 @@ d3.csv("../data/nba.csv", function(error, data) {
       .attr("x", function(d) { return 5; })
       .attr("y", function(d) { return 10; })
      .attr("dy", ".35em")
-      .text(function(d) { return d["Team"]; });
-     // .style("opacity", function(d) { d.w = this.getComputedTextLength(); return d.dx > d.w ? 1 : 0; });
+      .text(function(d) { return d["Team"]; })
+      .style("opacity", .99);
 
 		
 /*	d3.selectAll("input").on("change", function change() {
@@ -238,22 +240,28 @@ d3.csv("../data/nba.csv", function(error, data) {
 	}
 	  
 	function zoom(d) {
+	
+	  zoomed = !zoomed;
+	  
 	  var kx = width / d.dx, ky = height / d.dy;
 	  x.domain([d.x, d.x + d.dx]);
 	  y.domain([d.y, d.y + d.dy]);
 	
 	  var t = div2.selectAll("g.cell").transition()
-		  .duration(d3.event.altKey ? 7500 : 750)
+		  .duration(d3.event.altKey ? 450 : 450)
 		  .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
 	
 	  t.select("rect")
 		  .attr("width", function(d) { return kx * d.dx - 1; })
 		  .attr("height", function(d) { return ky * d.dy - 1; })
+		  .style("fill", function(d) { return ( zoomed ? wl_color(d) : color(d.Division)) });
+		  
+		  console.log(d);
 	
 	  t.select("text")
 		  .attr("x", function(d) { return 5 })
 		  .attr("y", function(d) { return 10; })
-	//	  .style("opacity", function(d) { return kx * d.dx > d.w ? 1 : 0; });
+		  .style("opacity", 1);
 	
 	  x_node = d;
 	  d3.event.stopPropagation();
@@ -323,5 +331,37 @@ d3.csv("../data/nba.csv", function(error, data) {
 	  };
 	  return nest({}, 0);
 	}
+	
+	function wl_color(d) {
+		if (d[season+"Win"] > d[season+"Loss"]) 
+			return hsv_to_hex(120, 100, d[season+"Win"]/70.0*100);
+		
+		return hsv_to_hex(0, 100, 100*d[season+"Loss"]/70);
+	}
+	
+	function hsv_to_hex(hue, sat, val) {
+		var rgb = {};
+		var h = Math.round(hue);
+		var s = Math.round(sat * 255 / 100);
+		var v = Math.round(val * 255 / 100);
+		if (s == 0) {
+			rgb.r = rgb.g = rgb.b = v;
+		} else {
+			var t1 = v;
+			var t2 = (255 - s) * v / 255;
+			var t3 = (t1 - t2) * (h % 60) / 60;
+			if (h == 360) h = 0;
+			if (h < 60) { rgb.r = t1; rgb.b = t2; rgb.g = t2 + t3 }
+			else if (h < 120) { rgb.g = t1; rgb.b = t2; rgb.r = t1 - t3 }
+			else if (h < 180) { rgb.g = t1; rgb.r = t2; rgb.b = t2 + t3 }
+			else if (h < 240) { rgb.b = t1; rgb.r = t2; rgb.g = t1 - t3 }
+			else if (h < 300) { rgb.b = t1; rgb.g = t2; rgb.r = t2 + t3 }
+			else if (h < 360) { rgb.r = t1; rgb.g = t2; rgb.b = t1 - t3 }
+			else { rgb.r = 0; rgb.g = 0; rgb.b = 0 }
+		}
+		return sprintf("#%02x%02x%02x", rgb.r, rgb.g, rgb.b);
+		
+	}
+	
   	
 });
