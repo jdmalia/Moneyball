@@ -13,6 +13,9 @@ var nba_data;
 var division_map = new Array();
 var teams = new Array();
 
+var small_dot = 5;
+var big_dot = 8;
+
 var zoomed = false;
 
 /* 
@@ -21,7 +24,8 @@ var zoomed = false;
  * map function - maps from data value to display value
  * axis - sets up axis
  */ 
-var season = "12-13 ";
+var season_num = 4;
+var season = sprintf("%02d-%02d ", season_num, season_num+1);
 
 // setup x 
 var xValue = function(d) { return d[season+"Salary"];}, // data -> value
@@ -97,70 +101,38 @@ d3.csv("../data/nba.csv", function(error, data) {
 
 	var nodes = treemap.nodes(x_root)
       .filter(function(d) { return !d.children; });
-
-/*	  
-	var node = div2.selectAll(".node")
-		.data(nodes)
-	.enter().append("div")
-		.attr("class", "node")
-		.call(position)
-		.style("background", function(d) { return d.children ?  null: color(d['Division']) ; })
-		.text(function(d) { return d.children ? null : d["Team"]; })
-		.attr("id", function(d) { return d.children ? null : "tm"+d["Team"]; } )
-		.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
-      	.on("click", function(d) { return zoom(x_node == d.parent ? x_root : d.parent); })
-		.on("mouseover", function(d) { details_on_demand(d); } )
-		.on("mouseout", function(d) { details_off(d); } );
-	*/
-
   
 
-  var cell = div2.selectAll("g")
-      .data(nodes)
-    .enter().append("svg:g")
-      .attr("class", "cell")
-      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
-      .on("click", function(d) { return zoom(x_node == d.parent ? x_root : d.parent); })
-
-  cell.append("svg:rect")
-      .attr("width", function(d) { return d.dx - 1; })
-      .attr("height", function(d) { return d.dy - 1; })
-      .style("fill", function(d) { return color(d.Division); })
+	var cell = div2.selectAll("g")
+	  .data(nodes)
+	.enter().append("svg:g")
+	  .attr("class", "cell")
+	  .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+	  .on("click", function(d) { return zoom(x_node == d.parent ? x_root : d.parent); })
+	
+	cell.append("svg:rect")
+	  .attr("width", function(d) { return d.dx - 1; })
+	  .attr("height", function(d) { return d.dy - 1; })
+	  .style("fill", function(d) { return color(d.Division); })
 	  .attr("id", function(d) {return "tm"+d.Team;})
 	  .on("mouseover", function(d) { details_on_demand(d); })
 	  .on("mouseout", function(d) { details_off(d); });
 	  
-
- cell.append("svg:text")
-      .attr("x", function(d) { return 5; })
-      .attr("y", function(d) { return 10; })
-     .attr("dy", ".35em")
-	   .append("tspan")
-      .text(function(d) { return d["Team"]; })
-      .style("opacity", .99)
-	  
-
-		
-/*	d3.selectAll("input").on("change", function change() {
-		var value = this.value == "count"
-			? function() { return 1; }
-			: function(d) { return d[season+"Salary"]; };
-
-		node
-			.data(treemap.value(value).nodes)
-		 .transition()
-			.duration(1500)
-			.call(position);
-			
-	}); 
-*/
 	
+	cell.append("svg:text")
+	  .attr("x", function(d) { return 5; })
+	  .attr("y", function(d) { return 10; })
+	 .attr("dy", ".35em")
+	  .append("tspan")
+	  .text(function(d) { return d["Team"]; })
+	  .style("opacity", .99)
+	  
 	 d3.select(window).on("click", function() {zoomed = true; zoom(x_root); });
-
-	  d3.select("select").on("change", function(d) {
+	
+	 d3.select("select").on("change", function(d) {
 		treemap.value(this.value == d[season+"Salary"] ? size(d) : count).nodes(x_root);
 		zoom(x_node);
-  });
+    });
 
   
 	function position() {
@@ -204,7 +176,7 @@ d3.csv("../data/nba.csv", function(error, data) {
 	.enter().append("circle")
 	  .attr("id", function(d) {return "sp"+d["Team"];})
 	  .attr("class", "dot")
-	  .attr("r", 3.5)
+	  .attr("r", small_dot)
 	  .attr("cx", xMap)
 	  .attr("cy", yMap)
 	  .style("fill", function(d) { return color(cValue(d));}) 
@@ -276,7 +248,7 @@ d3.csv("../data/nba.csv", function(error, data) {
 			      document.getElementById("sp"+team).setAttribute("opacity", .2);
 				  document.getElementById("l"+division_map[team]).setAttribute("opacity", .2);
 			  } else {
-				  document.getElementById("sp"+team).setAttribute("r", 7);
+				  document.getElementById("sp"+team).setAttribute("r", big_dot);
 			  }
 		  });
 	  } 
@@ -284,7 +256,7 @@ d3.csv("../data/nba.csv", function(error, data) {
 		  teams.forEach(function (team) {
 			  	  document.getElementById("l"+division_map[team]).setAttribute("opacity", 1);
 			      document.getElementById("sp"+team).setAttribute("opacity", 1);
-				  document.getElementById("sp"+team).setAttribute("r", 3.5);
+				  document.getElementById("sp"+team).setAttribute("r", small_dot);
 		  });
 	  }
 	
@@ -296,11 +268,13 @@ d3.csv("../data/nba.csv", function(error, data) {
 	  
 	document.getElementById("tm"+d.Team).style.border = "1px solid black";
 	document.getElementById("tm"+d.Team).style.zIndex = "40000";
-	document.getElementById("sp"+d.Team).setAttribute("r", 7);
+	document.getElementById("sp"+d.Team).setAttribute("r", big_dot);
 	document.getElementById("sp"+d.Team).style.zIndex = "100000";
 	
-	var dot = document.getElementById("sp"+d["Team"]);
+	var dot = document.getElementById("sp"+d.Team);
 	
+//	node.style.border = "1px solid black";
+//	node.style.zIndex = 60000;
 	
 	tooltip.transition()
 	   .duration(100)
@@ -311,15 +285,6 @@ d3.csv("../data/nba.csv", function(error, data) {
 	   .style("max-width", "115px")
 	   .style("height", "auto");
 	   
-/*	   d3.select("#pointer").append("div")
-	    .attr("class", "arrow-left")
-		.attr("id", "my_pointer")
-		.style("position", "absolute")
-		.style("left", tt.style.left + "px")
-		.style("top", tt.style.top + "px")
-		.style("height", "auto");
-	   */
-	
 	   
 	tooltip.html("<b>" + d["Team"] + "<b><br/>\t  Salary: <b>" + curr_fmt(xValue(d)*1000000)
 	+ "</b><br/>\t  Wins: <b>" + yValue(d) + "</b>; Losses: <b>" + d[season+"Loss"] + "</b>")
@@ -332,7 +297,7 @@ d3.csv("../data/nba.csv", function(error, data) {
 	
 	function details_off(d) {
 	  
-	  document.getElementById("sp"+d.Team).setAttribute("r", 3.5);
+	  if(!zoomed) document.getElementById("sp"+d.Team).setAttribute("r",small_dot);
 	  document.getElementById("sp"+d.Team).style.zIndex = "30000";
 	  document.getElementById("tm"+d["Team"]).style.border = "1px solid white";
 	  document.getElementById("tm"+d["Team"]).style.zIndex = "20000";
