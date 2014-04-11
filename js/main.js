@@ -9,6 +9,9 @@ var margin = {top: 40, right: 20, bottom: 30, left: 40},
     y = d3.scale.linear().range([0, height]);
 	
 var x_root, x_node;
+var nba_data;
+var division_map = new Array();
+var teams = new Array();
 
 var zoomed = false;
 
@@ -80,8 +83,11 @@ var curr_fmt = d3.format("$,.0f");
 // load data
 d3.csv("../data/nba.csv", function(error, data) {
 	
+	nba_data = data;
    // getting data for scatterplot
 	data.forEach(function(d) {
+	  teams.push(d.Team);
+	  division_map[d.Team] = d.Division;
 	  for (i = 1; i < 13; ++i) {
 		  salary = sprintf("%02d-%02d Salary", i, i+1);
 		  win = sprintf("%02d-%02d Win", i, i+1);
@@ -218,6 +224,7 @@ d3.csv("../data/nba.csv", function(error, data) {
 	var legend = svg.selectAll(".legend")
 	  .data(color.domain())
 	.enter().append("g")
+	  .attr("id", function(d) {return "l"+d})
 	  .attr("class", "legend")
 	  .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 	
@@ -267,6 +274,28 @@ d3.csv("../data/nba.csv", function(error, data) {
 		  .attr("x", function(d) { return 5 })
 		  .attr("y", function(d) { return 10; })
 		  .style("opacity", 1);
+		  
+	  if(zoomed) {
+		  
+		  teams.forEach(function (team) {
+			  console.log(d);
+			  console.log("d.Division: "+d.Division);
+			  console.log("Map ["+team+"]: "+division_map[team]);
+			  if(division_map[team] != d.name) {
+			      document.getElementById("sp"+team).setAttribute("opacity", .2);
+				  document.getElementById("l"+division_map[team]).setAttribute("opacity", .2);
+			  } else {
+				  document.getElementById("sp"+team).setAttribute("r", 7);
+			  }
+		  });
+	  } 
+	  else {
+		  teams.forEach(function (team) {
+			  	  document.getElementById("l"+division_map[team]).setAttribute("opacity", 1);
+			      document.getElementById("sp"+team).setAttribute("opacity", 1);
+				  document.getElementById("sp"+team).setAttribute("r", 3.5);
+		  });
+	  }
 	
 	  x_node = d;
 	  d3.event.stopPropagation();
