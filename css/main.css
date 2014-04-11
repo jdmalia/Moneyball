@@ -25,6 +25,20 @@ h2 {
   stroke: #000;
 }
 
+.chart {
+	display: block;
+	margin: auto;
+	margin-top: 40px;
+}
+
+text {
+	font-size: 11px;
+}
+
+rect {
+	fill: none;
+}
+
 .tooltip {
   position: absolute;
   width: 200px;
