@@ -370,13 +370,12 @@ d3.csv("../data/nba.csv", function(error, data) {
 	}
 	
 	function tm_label(d) {
-		var res = "'";
+		var res = "";
 		var words = d.Team.split(" ");
 		words.forEach(function(w) {
-			res += w + "'+<br>+'";
+			res += w + "\n";
 		});
-		res += "'";
-		return words;
+		return res;
 	}
 	
   	
