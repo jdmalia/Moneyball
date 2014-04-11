@@ -124,7 +124,7 @@ d3.csv("../data/nba.csv", function(error, data) {
 	  .attr("y", function(d) { return 10; })
 	 .attr("dy", ".35em")
 	  .append("tspan")
-	  .text(function(d) { return d["Team"]; })
+	  .text(function(d) { return tm_label(d); })
 	  .style("opacity", .99)
 	  
 	 d3.select(window).on("click", function() {zoomed = true; zoom(x_root); });
@@ -216,7 +216,7 @@ d3.csv("../data/nba.csv", function(error, data) {
 	  
 	function zoom(d) {
 	
-	  zoomed = !zoomed;
+	  
 	  
 	  var kx = width / d.dx, ky = height / d.dy;
 	  x.domain([d.x, d.x + d.dx]);
@@ -229,21 +229,17 @@ d3.csv("../data/nba.csv", function(error, data) {
 	  t.select("rect")
 		  .attr("width", function(d) { return kx * d.dx - 1; })
 		  .attr("height", function(d) { return ky * d.dy - 1; })
-		  .style("fill", function(d) { return ( zoomed ? wl_color(d) : color(d.Division)) });
+		  .style("fill", function(d) { return ( zoomed ?  color(d.Division) : wl_color(d) ) });
 		  
-		  console.log(d);
-	
+
 	  t.select("text")
 		  .attr("x", function(d) { return 5 })
 		  .attr("y", function(d) { return 10; })
 		  .style("opacity", 1);
 		  
-	  if(zoomed) {
+	  if(!zoomed) {
 		  
 		  teams.forEach(function (team) {
-			  console.log(d);
-			  console.log("d.Division: "+d.Division);
-			  console.log("Map ["+team+"]: "+division_map[team]);
 			  if(division_map[team] != d.name) {
 			      document.getElementById("sp"+team).setAttribute("opacity", .2);
 				  document.getElementById("l"+division_map[team]).setAttribute("opacity", .2);
@@ -262,6 +258,8 @@ d3.csv("../data/nba.csv", function(error, data) {
 	
 	  x_node = d;
 	  d3.event.stopPropagation();
+	  
+	  zoomed = !zoomed;
 	}
 	
 	function details_on_demand(d) {
@@ -369,6 +367,16 @@ d3.csv("../data/nba.csv", function(error, data) {
 		}
 		return sprintf("#%02x%02x%02x", Math.min(0xFF, rgb.r), Math.min(0xFF, rgb.g), Math.min(0xFF, rgb.b));
 		
+	}
+	
+	function tm_label(d) {
+		var res = "'";
+		var words = d.Team.split(" ");
+		words.forEach(function(w) {
+			res += w + "'+<br>+'";
+		});
+		res += "'";
+		return words;
 	}
 	
   	
