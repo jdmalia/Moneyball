@@ -376,9 +376,9 @@ d3.csv("../data/nba.csv", function(error, data) {
 	
 	function wl_color(d) {
 		if (d[season+"Win"] > d[season+"Loss"]) 
-			return hsv_to_hex(120, 100, d[season+"Win"]/70.0*100);
+			return hsv_to_hex(120, d[season+"Win"]/d[season+"Loss"]*28, 100);
 		
-		return hsv_to_hex(0, 100, 100*d[season+"Loss"]/70);
+		return hsv_to_hex(0, d[season+"Loss"]/d[season+"Win"]*28, 100);
 	}
 	
 	function hsv_to_hex(hue, sat, val) {
