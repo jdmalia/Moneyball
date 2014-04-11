@@ -124,19 +124,24 @@ d3.csv("../data/nba.csv", function(error, data) {
     .enter().append("svg:g")
       .attr("class", "cell")
       .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
-      .on("click", function(d) { return zoom(x_node == d.parent ? x_root : d.parent); });
+      .on("click", function(d) { return zoom(x_node == d.parent ? x_root : d.parent); })
 
   cell.append("svg:rect")
       .attr("width", function(d) { return d.dx - 1; })
       .attr("height", function(d) { return d.dy - 1; })
-      .style("fill", function(d) { return color(d.Division); });
+      .style("fill", function(d) { return color(d.Division); })
+	  .attr("id", function(d) {return "tm"+d.Team;})
+	  .on("mouseover", function(d) { details_on_demand(d); })
+	  .on("mouseout", function(d) { details_off(d); });
+	  
 
  cell.append("svg:text")
       .attr("x", function(d) { return 5; })
       .attr("y", function(d) { return 10; })
      .attr("dy", ".35em")
       .text(function(d) { return d["Team"]; })
-      .style("opacity", .99);
+      .style("opacity", .99)
+	  
 
 		
 /*	d3.selectAll("input").on("change", function change() {
