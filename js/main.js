@@ -21,7 +21,7 @@ var zoomed = false;
  * map function - maps from data value to display value
  * axis - sets up axis
  */ 
-var season = "05-06 ";
+var season = "12-13 ";
 
 // setup x 
 var xValue = function(d) { return d[season+"Salary"];}, // data -> value
@@ -135,6 +135,7 @@ d3.csv("../data/nba.csv", function(error, data) {
       .attr("x", function(d) { return 5; })
       .attr("y", function(d) { return 10; })
      .attr("dy", ".35em")
+	   .append("tspan")
       .text(function(d) { return d["Team"]; })
       .style("opacity", .99)
 	  
@@ -376,9 +377,9 @@ d3.csv("../data/nba.csv", function(error, data) {
 	
 	function wl_color(d) {
 		if (d[season+"Win"] > d[season+"Loss"]) 
-			return hsv_to_hex(120, d[season+"Win"]/d[season+"Loss"]*28, 100);
+			return hsv_to_hex(120, d[season+"Win"]/d[season+"Loss"]*20, 100);
 		
-		return hsv_to_hex(0, d[season+"Loss"]/d[season+"Win"]*28, 100);
+		return hsv_to_hex(0, d[season+"Loss"]/d[season+"Win"]*20, 100);
 	}
 	
 	function hsv_to_hex(hue, sat, val) {
@@ -401,7 +402,7 @@ d3.csv("../data/nba.csv", function(error, data) {
 			else if (h < 360) { rgb.r = t1; rgb.g = t2; rgb.b = t1 - t3 }
 			else { rgb.r = 0; rgb.g = 0; rgb.b = 0 }
 		}
-		return sprintf("#%02x%02x%02x", rgb.r, rgb.g, rgb.b);
+		return sprintf("#%02x%02x%02x", Math.min(0xFF, rgb.r), Math.min(0xFF, rgb.g), Math.min(0xFF, rgb.b));
 		
 	}
 	
