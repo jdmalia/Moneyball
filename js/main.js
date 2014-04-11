@@ -154,7 +154,7 @@ d3.csv("../data/nba.csv", function(error, data) {
 	}); 
 */
 	
-	 d3.select(window).on("click", function() { zoom(x_root); });
+	 d3.select(window).on("click", function() {zoomed = true; zoom(x_root); });
 
 	  d3.select("select").on("change", function(d) {
 		treemap.value(this.value == d[season+"Salary"] ? size(d) : count).nodes(x_root);
@@ -298,19 +298,35 @@ d3.csv("../data/nba.csv", function(error, data) {
 	document.getElementById("sp"+d.Team).setAttribute("r", 7);
 	document.getElementById("sp"+d.Team).style.zIndex = "100000";
 	
+	var dot = document.getElementById("sp"+d["Team"]);
+	
+	
 	tooltip.transition()
-	   .duration(200)
-	   .style("opacity", 1)
-	   .style("background", "#FFFFFF")
-	   .style("max-width", "140px")
+	   .duration(100)
+	   .style("opacity", .85)
+	   .style("background", "#090909")
+	   .style("border", "2px solid black")
+	   .style("color", "#FFFFFF")
+	   .style("max-width", "115px")
 	   .style("height", "auto");
 	   
-	tooltip.html("<b>" + d["Team"] + "</b><br/>\t  Salary: <b>" + curr_fmt(xValue(d)*1000000)
+/*	   d3.select("#pointer").append("div")
+	    .attr("class", "arrow-left")
+		.attr("id", "my_pointer")
+		.style("position", "absolute")
+		.style("left", tt.style.left + "px")
+		.style("top", tt.style.top + "px")
+		.style("height", "auto");
+	   */
+	
+	   
+	tooltip.html("<b>" + d["Team"] + "<b><br/>\t  Salary: <b>" + curr_fmt(xValue(d)*1000000)
 	+ "</b><br/>\t  Wins: <b>" + yValue(d) + "</b>; Losses: <b>" + d[season+"Loss"] + "</b>")
-	   .style("left",  d["Team"] ? (document.getElementById("sp"+d["Team"]).getBoundingClientRect().left + 16) + "px": null)
-	   .style("top", d["Team"] ? (document.getElementById("sp"+d["Team"]).getBoundingClientRect().top - 18) + "px": null)
+	   .style("left",  d["Team"] ? (dot.getBoundingClientRect().left + 16) + "px": null)
+	   .style("top", d["Team"] ? (dot.getBoundingClientRect().top - 20) + "px": null)
 	   .style("padding", "5px")
-	   .style("padding-left", "10px");
+	   .style("padding-left", "10px")
+	   .style("font-size", "11px");
 	}
 	
 	function details_off(d) {
@@ -321,8 +337,10 @@ d3.csv("../data/nba.csv", function(error, data) {
 	  document.getElementById("tm"+d["Team"]).style.zIndex = "20000";
 	  
 	  tooltip.transition()
-		   .duration(500)
+		   .duration(100)
 		   .style("opacity", 0);
+		   
+	   d3.select("#my_pointer").remove();
 	}
   
 	// Convert .csv data to json format for tree map
