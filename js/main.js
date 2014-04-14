@@ -17,8 +17,9 @@ var big_dot = 8;
 
 var zoomed = false;
 
-var season_num = 1;
+var season_num = 5;
 var season = sprintf("%02d-%02d ", season_num, season_num+1);
+$("h3").text(season + " Season");
 
 /* 
  * value accessor - returns the value to encode for a given data object.
@@ -29,7 +30,7 @@ var season = sprintf("%02d-%02d ", season_num, season_num+1);
 
 var sliders = $(".slider");
 sliders.noUiSlider({
-	start: [ 0 ],
+	start: [ 5 ],
     range: {
     		'min': 1, 
     		'max': 12,
@@ -44,12 +45,10 @@ sliders.each(function(){
 sliders.change(function(){
 	season_num = parseInt(sliders.val());
 	season = sprintf("%02d-%02d ", season_num, season_num+1);
+	$("h3").text(season + " Season");
 	update();
-	//alert(parseInt(sliders.val()));
 });
 
-//var seasons = [ "01-02 ", "02-03 ", "03-04 ", "04-05 ", "06-07 ", "07-08 ", "08-09 ", "09-10 ", "10-11 ", "11-12 ", "12-13 "];
-//var season = seasons[parseInt(sliders.val())];
 
 // setup x 
 var xValue = function(d) { return d[season+"Salary"];}, // data -> value
