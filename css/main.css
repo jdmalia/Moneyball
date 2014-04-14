@@ -86,3 +86,10 @@ rect {
 	float: left;
 	margin-right: 10px;
 }
+
+#season_slider {
+	position:  relative;
+	width:  1200px;
+	margin-left:auto;
+	margin-right:auto;
+}

@@ -17,9 +17,10 @@ var big_dot = 8;
 
 var zoomed = false;
 
-var season_num = 5;
+var season_num = 7;
 var season = sprintf("%02d-%02d ", season_num, season_num+1);
-$("h3").text(season + " Season");
+var season_heading = sprintf("20%02d-%02d ", season_num, season_num+1);
+$("h3").text(season_heading + " Season");
 
 /* 
  * value accessor - returns the value to encode for a given data object.
@@ -30,7 +31,7 @@ $("h3").text(season + " Season");
 
 var sliders = $(".slider");
 sliders.noUiSlider({
-	start: [ 5 ],
+	start: [ 7 ],
     range: {
     		'min': 1, 
     		'max': 12,
@@ -45,6 +46,7 @@ sliders.each(function(){
 sliders.change(function(){
 	season_num = parseInt(sliders.val());
 	season = sprintf("%02d-%02d ", season_num, season_num+1);
+	season_heading = sprintf("20%02d-%02d ", season_num, season_num+1);
 	$("h3").text(season + " Season");
 	update();
 });
