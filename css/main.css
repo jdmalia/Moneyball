@@ -13,6 +13,11 @@ h2 {
   font-size: 20px;
   margin-top: 10px;
 }
+h3 {
+  text-align: center;
+  font-size: 20px;
+  margin-top: 10px;
+}
 
 .arrow-left {
 	width: 0; 
@@ -20,7 +25,7 @@ h2 {
 	border-top: 8px solid transparent;
 	border-bottom: 8px solid transparent; 
 	border-right:10px solid black; 
-	z-index = 90000;
+	z-index:  90000;
 }
 
 .axis path,
@@ -80,12 +85,4 @@ rect {
 #sp_vis {
 	float: left;
 	margin-right: 10px;
-}
-
-#season_slider {
-	margin-left: auto;
-	margin-right: auto;
-	position: relative;
-	width: 90%;
-	top: 570px;
 }
