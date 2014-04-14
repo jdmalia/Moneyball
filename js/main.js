@@ -24,7 +24,28 @@ var zoomed = false;
  * map function - maps from data value to display value
  * axis - sets up axis
  */ 
-var season_num = 4;
+
+var sliders = $(".slider");
+sliders.noUiSlider({
+	start: [ 2 ],
+    range: {
+    		'min': 0, 
+    		'max': 11,
+    		}
+   , step: 1
+});
+sliders.each(function(){
+    $(this).val($(this).attr("data-value"));
+});
+var season_num = 2;
+sliders.change(function(){
+	//alert(parseInt(sliders.val()));
+});
+
+//var seasons = [ "01-02 ", "02-03 ", "03-04 ", "04-05 ", "06-07 ", "07-08 ", "08-09 ", "09-10 ", "10-11 ", "11-12 ", "12-13 "];
+//var season = seasons[index];
+
+var season_num = 2;
 var season = sprintf("%02d-%02d ", season_num, season_num+1);
 
 // setup x 
