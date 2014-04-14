@@ -1,4 +1,3 @@
-
 <!-- Example based on http://bl.ocks.org/mbostock/3887118 -->
 <!-- Tooltip example from http://www.d3noob.org/2013/01/adding-tooltips-to-d3js-graph.html -->
 
@@ -43,7 +42,7 @@ sliders.change(function(){
 });
 
 //var seasons = [ "01-02 ", "02-03 ", "03-04 ", "04-05 ", "06-07 ", "07-08 ", "08-09 ", "09-10 ", "10-11 ", "11-12 ", "12-13 "];
-//var season = seasons[index];
+//var season = seasons[parseInt(sliders.val())];
 
 var season_num = 2;
 var season = sprintf("%02d-%02d ", season_num, season_num+1);
