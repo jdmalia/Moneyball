@@ -8,7 +8,7 @@ var margin = {top: 40, right: 20, bottom: 30, left: 40},
     y = d3.scale.linear().range([0, height]);
 	
 var x_root, x_node;
-var nba_data;
+var nba_data, nba_nodes;
 var division_map = new Array();
 var teams = new Array();
 
@@ -16,6 +16,9 @@ var small_dot = 5;
 var big_dot = 8;
 
 var zoomed = false;
+
+var season_num = 1;
+var season = sprintf("%02d-%02d ", season_num, season_num+1);
 
 /* 
  * value accessor - returns the value to encode for a given data object.
@@ -26,26 +29,27 @@ var zoomed = false;
 
 var sliders = $(".slider");
 sliders.noUiSlider({
-	start: [ 2 ],
+	start: [ 0 ],
     range: {
-    		'min': 0, 
-    		'max': 11,
+    		'min': 1, 
+    		'max': 12,
     		}
    , step: 1
 });
+
 sliders.each(function(){
     $(this).val($(this).attr("data-value"));
 });
-var season_num = 2;
+
 sliders.change(function(){
+	season_num = parseInt(sliders.val());
+	season = sprintf("%02d-%02d ", season_num, season_num+1);
+	update();
 	//alert(parseInt(sliders.val()));
 });
 
 //var seasons = [ "01-02 ", "02-03 ", "03-04 ", "04-05 ", "06-07 ", "07-08 ", "08-09 ", "09-10 ", "10-11 ", "11-12 ", "12-13 "];
 //var season = seasons[parseInt(sliders.val())];
-
-var season_num = 2;
-var season = sprintf("%02d-%02d ", season_num, season_num+1);
 
 // setup x 
 var xValue = function(d) { return d[season+"Salary"];}, // data -> value
@@ -94,34 +98,217 @@ var tooltip = d3.select("body").append("div")
 
 var curr_fmt = d3.format("$,.0f");
 
-// load data
-d3.csv("../data/nba.csv", function(error, data) {
+function update() {
+	console.log(season);
 	
-	nba_data = data;
-   // getting data for scatterplot
-	data.forEach(function(d) {
-	  teams.push(d.Team);
-	  division_map[d.Team] = d.Division;
-	  for (i = 1; i < 13; ++i) {
-		  salary = sprintf("%02d-%02d Salary", i, i+1);
-		  win = sprintf("%02d-%02d Win", i, i+1);
-		  loss = sprintf("%02d-%02d Loss", i, i+1);
-		  d[salary] = (+d[salary])/1000000;
-		  d[win] = +d[win];
-		  d[loss] = +d[loss];	  
-	  }
+	//Scatterplot
+	dots = svg.selectAll(".dot")
+	  .data(nba_data).transition(1000);
+	  
+	dots.attr("cx", xMap).attr("cy", yMap);
+	
+	$(".chart").remove();
+	div2 = d3.select("#tm_vis").append("div")
+    .attr("class", "chart")
+    .style("width", (width + margin.left + margin.right) + "px")
+    .style("height", (height + margin.top + margin.bottom) + "px")
+  .append("svg:svg")
+    .style("width", (width) + "px")
+    .style("height", (height) + "px")
+  .append("svg:g")
+    .attr("transform", "translate(.5,.5)");
+	
+	draw_treemap();	
+}
+
+function details_on_demand(d) {
+	  
+	document.getElementById("tm"+d.Team).style.border = "1px solid black";
+	document.getElementById("tm"+d.Team).style.zIndex = "40000";
+	document.getElementById("sp"+d.Team).setAttribute("r", big_dot);
+	document.getElementById("sp"+d.Team).style.zIndex = "100000";
+	
+	var dot = document.getElementById("sp"+d.Team);
+	
+	tooltip.transition()
+	   .duration(100)
+	   .style("opacity", .85)
+	   .style("background", "#090909")
+	   .style("border", "2px solid black")
+	   .style("color", "#FFFFFF")
+	   .style("max-width", "115px")
+	   .style("height", "auto");
+	   
+	   
+	tooltip.html("<b>" + d["Team"] + "<b><br/>\t  Salary: <b>" + curr_fmt(xValue(d)*1000000)
+	+ "</b><br/>\t  Wins: <b>" + yValue(d) + "</b>; Losses: <b>" + d[season+"Loss"] + "</b>")
+	   .style("left",  d["Team"] ? (dot.getBoundingClientRect().left + 16) + "px": null)
+	   .style("top", d["Team"] ? (dot.getBoundingClientRect().top - 20) + "px": null)
+	   .style("padding", "5px")
+	   .style("padding-left", "10px")
+	   .style("font-size", "11px");
+}
+	
+function details_off(d) {
+  
+  if(!zoomed) document.getElementById("sp"+d.Team).setAttribute("r",small_dot);
+  document.getElementById("sp"+d.Team).style.zIndex = "30000";
+  document.getElementById("tm"+d["Team"]).style.border = "1px solid white";
+  document.getElementById("tm"+d["Team"]).style.zIndex = "20000";
+  
+  tooltip.transition()
+	   .duration(100)
+	   .style("opacity", 0);
+	   
+}
+
+// Convert .csv data to json format for tree map
+function genJSON(csvData, groups) {
+
+  var genGroups = function(data) {
+	return _.map(data, function(element, index) {
+	  return { name : index, children : element };
 	});
+  };
 
+  var nest = function(node, curIndex) {
+	if (curIndex === 0) {
+	  node.children = genGroups(_.groupBy(csvData, groups[0]));
+	  _.each(node.children, function (child) {
+		nest(child, curIndex + 1);
+	  });
+	}
+	else {
+	  if (curIndex < groups.length) {
+		node.children = genGroups(
+		  _.groupBy(node.children, groups[curIndex])
+		);
+		_.each(node.children, function (child) {
+		  nest(child, curIndex + 1);
+		});
+	  }
+	}
+	return node;
+  };
+  return nest({}, 0);
+}
 
-	<!------------------------TREEMAP---------------------------->
+function wl_color(d) {
+	if (d[season+"Win"] > d[season+"Loss"]) 
+		return hsv_to_hex(120, d[season+"Win"]/d[season+"Loss"]*20, 100);
+	
+	return hsv_to_hex(0, d[season+"Loss"]/d[season+"Win"]*20, 100);
+}
 
+function hsv_to_hex(hue, sat, val) {
+	var rgb = {};
+	var h = Math.round(hue);
+	var s = Math.round(sat * 255 / 100);
+	var v = Math.round(val * 255 / 100);
+	if (s == 0) {
+		rgb.r = rgb.g = rgb.b = v;
+	} else {
+		var t1 = v;
+		var t2 = (255 - s) * v / 255;
+		var t3 = (t1 - t2) * (h % 60) / 60;
+		if (h == 360) h = 0;
+		if (h < 60) { rgb.r = t1; rgb.b = t2; rgb.g = t2 + t3 }
+		else if (h < 120) { rgb.g = t1; rgb.b = t2; rgb.r = t1 - t3 }
+		else if (h < 180) { rgb.g = t1; rgb.r = t2; rgb.b = t2 + t3 }
+		else if (h < 240) { rgb.b = t1; rgb.r = t2; rgb.g = t1 - t3 }
+		else if (h < 300) { rgb.b = t1; rgb.g = t2; rgb.r = t2 + t3 }
+		else if (h < 360) { rgb.r = t1; rgb.g = t2; rgb.b = t1 - t3 }
+		else { rgb.r = 0; rgb.g = 0; rgb.b = 0 }
+	}
+	return sprintf("#%02x%02x%02x", Math.min(0xFF, rgb.r), Math.min(0xFF, rgb.g), Math.min(0xFF, rgb.b));
+	
+}
+
+function tm_label(d) {
+	var res = "";
+	var words = d.Team.split(" ");
+	words.forEach(function(w) {
+		res += w + "\n";
+	});
+	return res;
+}
+
+function size(d) {
+	return d[season+"Salary"];
+}
+
+function count(d) {
+  return 1;
+}
+	  
+function zoom(d) {
+	
+  if (!d.dx) {
+	  d.dx = 590;
+	  d.dy = 430;
+	  d.x = 0;
+	  d.y = 0;
+  }
+  
+  var kx = width / d.dx, ky = height / d.dy;
+  
+  console.log("d.dx: "+d.dx);
+  console.log("d.dy: "+d.dy);
+  console.log("d.x: "+d.x);
+  console.log("d.y: "+d.y);
+  
+  x.domain([d.x, d.x + d.dx]);
+  y.domain([d.y, d.y + d.dy]);
+
+  var t = div2.selectAll("g.cell").transition()
+	  .duration(450)
+	  .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
+
+  t.select("rect")
+	  .attr("width", function(d) { return kx * d.dx - 1; })
+	  .attr("height", function(d) { return ky * d.dy - 1; })
+	  .style("fill", function(d) { return ( zoomed ?  color(d.Division) : wl_color(d) ) });
+	  
+
+  t.select("text")
+	  .attr("x", function(d) { return 5 })
+	  .attr("y", function(d) { return 10; })
+	  .style("opacity", 1);
+	  
+  if(!zoomed) {
+	  
+	  teams.forEach(function (team) {
+		  if(division_map[team] != d.name) {
+			  document.getElementById("sp"+team).setAttribute("opacity", .2);
+			  document.getElementById("l"+division_map[team]).setAttribute("opacity", .2);
+		  } else {
+			  document.getElementById("sp"+team).setAttribute("r", big_dot);
+		  }
+	  });
+  } 
+  else {
+	  teams.forEach(function (team) {
+			  document.getElementById("l"+division_map[team]).setAttribute("opacity", 1);
+			  document.getElementById("sp"+team).setAttribute("opacity", 1);
+			  document.getElementById("sp"+team).setAttribute("r", small_dot);
+	  });
+  }
+
+  x_node = d;
+  d3.event.stopPropagation();
+  
+  zoomed = !zoomed;
+}
+
+function draw_treemap() {
 	// Converting the data
-	var preppedData = genJSON(data, ['Conference', 'Division']);
+	var preppedData = genJSON(nba_data, ['Conference', 'Division']);
 	x_node = x_root = preppedData;
 
 	var nodes = treemap.nodes(x_root)
       .filter(function(d) { return !d.children; });
-  
+	  
+	nba_nodes = nodes;
 
 	var cell = div2.selectAll("g")
 	  .data(nodes)
@@ -146,24 +333,29 @@ d3.csv("../data/nba.csv", function(error, data) {
 	  .append("tspan")
 	  .text(function(d) { return tm_label(d); })
 	  .style("opacity", .99)
-	  
-	 d3.select(window).on("click", function() {zoomed = true; zoom(x_root); });
+}
+
+// load data
+d3.csv("../data/nba.csv", function(error, data) {
 	
-	 d3.select("select").on("change", function(d) {
-		treemap.value(this.value == d[season+"Salary"] ? size(d) : count).nodes(x_root);
-		zoom(x_node);
-    });
+	nba_data = data;
+   // getting data for scatterplot
+	data.forEach(function(d) {
+	  teams.push(d.Team);
+	  division_map[d.Team] = d.Division;
+	  for (i = 1; i < 13; ++i) {
+		  salary = sprintf("%02d-%02d Salary", i, i+1);
+		  win = sprintf("%02d-%02d Win", i, i+1);
+		  loss = sprintf("%02d-%02d Loss", i, i+1);
+		  d[salary] = (+d[salary])/1000000;
+		  d[win] = +d[win];
+		  d[loss] = +d[loss];	  
+	  }
+	});
 
   
-	function position() {
-		this.style("left", function(d) { return d.x + "px"; })
-		  .style("top", function(d) { return d.y + "px"; })
-		  .style("width", function(d) { return Math.max(0, d.dx - 1) + "px"; })
-		  .style("height", function(d) { return Math.max(0, d.dy - 1) + "px"; });
-	}
-  
 	/* ---------------------------SCATTERPLOT------------------------------ */
-	xScale.domain([30, 130]);
+	xScale.domain([10, 130]);
 	yScale.domain([0, 70]);
 	
 	// x-axis
@@ -192,7 +384,7 @@ d3.csv("../data/nba.csv", function(error, data) {
 	
 	// draw dots
 	svg.selectAll(".dot")
-	  .data(data)
+	  .data(nba_data)
 	.enter().append("circle")
 	  .attr("id", function(d) {return "sp"+d["Team"];})
 	  .attr("class", "dot")
@@ -225,178 +417,9 @@ d3.csv("../data/nba.csv", function(error, data) {
 	  .attr("dy", ".35em")
 	  .style("text-anchor", "end")
 	  .text(function(d) { return d;})
+	  
+	  <!------------------------TREEMAP---------------------------->
 
-	function size(d) {
-	  return d[season+"Salary"];
-	}
-	
-	function count(d) {
-	  return 1;
-	}
-	  
-	function zoom(d) {
-	
-	  
-	  
-	  var kx = width / d.dx, ky = height / d.dy;
-	  x.domain([d.x, d.x + d.dx]);
-	  y.domain([d.y, d.y + d.dy]);
-	
-	  var t = div2.selectAll("g.cell").transition()
-		  .duration(d3.event.altKey ? 450 : 450)
-		  .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
-	
-	  t.select("rect")
-		  .attr("width", function(d) { return kx * d.dx - 1; })
-		  .attr("height", function(d) { return ky * d.dy - 1; })
-		  .style("fill", function(d) { return ( zoomed ?  color(d.Division) : wl_color(d) ) });
-		  
-
-	  t.select("text")
-		  .attr("x", function(d) { return 5 })
-		  .attr("y", function(d) { return 10; })
-		  .style("opacity", 1);
-		  
-	  if(!zoomed) {
-		  
-		  teams.forEach(function (team) {
-			  if(division_map[team] != d.name) {
-			      document.getElementById("sp"+team).setAttribute("opacity", .2);
-				  document.getElementById("l"+division_map[team]).setAttribute("opacity", .2);
-			  } else {
-				  document.getElementById("sp"+team).setAttribute("r", big_dot);
-			  }
-		  });
-	  } 
-	  else {
-		  teams.forEach(function (team) {
-			  	  document.getElementById("l"+division_map[team]).setAttribute("opacity", 1);
-			      document.getElementById("sp"+team).setAttribute("opacity", 1);
-				  document.getElementById("sp"+team).setAttribute("r", small_dot);
-		  });
-	  }
-	
-	  x_node = d;
-	  d3.event.stopPropagation();
-	  
-	  zoomed = !zoomed;
-	}
-	
-	function details_on_demand(d) {
-	  
-	document.getElementById("tm"+d.Team).style.border = "1px solid black";
-	document.getElementById("tm"+d.Team).style.zIndex = "40000";
-	document.getElementById("sp"+d.Team).setAttribute("r", big_dot);
-	document.getElementById("sp"+d.Team).style.zIndex = "100000";
-	
-	var dot = document.getElementById("sp"+d.Team);
-	
-//	node.style.border = "1px solid black";
-//	node.style.zIndex = 60000;
-	
-	tooltip.transition()
-	   .duration(100)
-	   .style("opacity", .85)
-	   .style("background", "#090909")
-	   .style("border", "2px solid black")
-	   .style("color", "#FFFFFF")
-	   .style("max-width", "115px")
-	   .style("height", "auto");
-	   
-	   
-	tooltip.html("<b>" + d["Team"] + "<b><br/>\t  Salary: <b>" + curr_fmt(xValue(d)*1000000)
-	+ "</b><br/>\t  Wins: <b>" + yValue(d) + "</b>; Losses: <b>" + d[season+"Loss"] + "</b>")
-	   .style("left",  d["Team"] ? (dot.getBoundingClientRect().left + 16) + "px": null)
-	   .style("top", d["Team"] ? (dot.getBoundingClientRect().top - 20) + "px": null)
-	   .style("padding", "5px")
-	   .style("padding-left", "10px")
-	   .style("font-size", "11px");
-	}
-	
-	function details_off(d) {
-	  
-	  if(!zoomed) document.getElementById("sp"+d.Team).setAttribute("r",small_dot);
-	  document.getElementById("sp"+d.Team).style.zIndex = "30000";
-	  document.getElementById("tm"+d["Team"]).style.border = "1px solid white";
-	  document.getElementById("tm"+d["Team"]).style.zIndex = "20000";
-	  
-	  tooltip.transition()
-		   .duration(100)
-		   .style("opacity", 0);
-		   
-	   d3.select("#my_pointer").remove();
-	}
-  
-	// Convert .csv data to json format for tree map
-	function genJSON(csvData, groups) {
-	
-	  var genGroups = function(data) {
-		return _.map(data, function(element, index) {
-		  return { name : index, children : element };
-		});
-	  };
-	
-	  var nest = function(node, curIndex) {
-		if (curIndex === 0) {
-		  node.children = genGroups(_.groupBy(csvData, groups[0]));
-		  _.each(node.children, function (child) {
-			nest(child, curIndex + 1);
-		  });
-		}
-		else {
-		  if (curIndex < groups.length) {
-			node.children = genGroups(
-			  _.groupBy(node.children, groups[curIndex])
-			);
-			_.each(node.children, function (child) {
-			  nest(child, curIndex + 1);
-			});
-		  }
-		}
-		return node;
-	  };
-	  return nest({}, 0);
-	}
-	
-	function wl_color(d) {
-		if (d[season+"Win"] > d[season+"Loss"]) 
-			return hsv_to_hex(120, d[season+"Win"]/d[season+"Loss"]*20, 100);
-		
-		return hsv_to_hex(0, d[season+"Loss"]/d[season+"Win"]*20, 100);
-	}
-	
-	function hsv_to_hex(hue, sat, val) {
-		var rgb = {};
-		var h = Math.round(hue);
-		var s = Math.round(sat * 255 / 100);
-		var v = Math.round(val * 255 / 100);
-		if (s == 0) {
-			rgb.r = rgb.g = rgb.b = v;
-		} else {
-			var t1 = v;
-			var t2 = (255 - s) * v / 255;
-			var t3 = (t1 - t2) * (h % 60) / 60;
-			if (h == 360) h = 0;
-			if (h < 60) { rgb.r = t1; rgb.b = t2; rgb.g = t2 + t3 }
-			else if (h < 120) { rgb.g = t1; rgb.b = t2; rgb.r = t1 - t3 }
-			else if (h < 180) { rgb.g = t1; rgb.r = t2; rgb.b = t2 + t3 }
-			else if (h < 240) { rgb.b = t1; rgb.r = t2; rgb.g = t1 - t3 }
-			else if (h < 300) { rgb.b = t1; rgb.g = t2; rgb.r = t2 + t3 }
-			else if (h < 360) { rgb.r = t1; rgb.g = t2; rgb.b = t1 - t3 }
-			else { rgb.r = 0; rgb.g = 0; rgb.b = 0 }
-		}
-		return sprintf("#%02x%02x%02x", Math.min(0xFF, rgb.r), Math.min(0xFF, rgb.g), Math.min(0xFF, rgb.b));
-		
-	}
-	
-	function tm_label(d) {
-		var res = "";
-		var words = d.Team.split(" ");
-		words.forEach(function(w) {
-			res += w + "\n";
-		});
-		return res;
-	}
-	
+	draw_treemap();
   	
 });
