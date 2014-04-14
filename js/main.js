@@ -119,6 +119,15 @@ function update() {
     .attr("transform", "translate(.5,.5)");
 	
 	draw_treemap();	
+	
+	if(zoomed) {
+		teams.forEach(function (team) {
+			  document.getElementById("l"+division_map[team]).setAttribute("opacity", 1);
+			  document.getElementById("sp"+team).setAttribute("opacity", 1);
+			  document.getElementById("sp"+team).setAttribute("r", small_dot);
+	  });
+	  zoomed = false;
+	}
 }
 
 function details_on_demand(d) {
@@ -195,9 +204,9 @@ function genJSON(csvData, groups) {
 
 function wl_color(d) {
 	if (d[season+"Win"] > d[season+"Loss"]) 
-		return hsv_to_hex(120, d[season+"Win"]/d[season+"Loss"]*20, 100);
+		return hsv_to_hex(120, d[season+"Win"]/d[season+"Loss"]*15, 100);
 	
-	return hsv_to_hex(0, d[season+"Loss"]/d[season+"Win"]*20, 100);
+	return hsv_to_hex(0, d[season+"Loss"]/d[season+"Win"]*15, 100);
 }
 
 function hsv_to_hex(hue, sat, val) {
@@ -252,11 +261,6 @@ function zoom(d) {
   
   var kx = width / d.dx, ky = height / d.dy;
   
-  console.log("d.dx: "+d.dx);
-  console.log("d.dy: "+d.dy);
-  console.log("d.x: "+d.x);
-  console.log("d.y: "+d.y);
-  
   x.domain([d.x, d.x + d.dx]);
   y.domain([d.y, d.y + d.dy]);
 
@@ -303,7 +307,7 @@ function zoom(d) {
 function draw_treemap() {
 	// Converting the data
 	var preppedData = genJSON(nba_data, ['Conference', 'Division']);
-	x_node = x_root = preppedData;
+	x_root = preppedData;
 
 	var nodes = treemap.nodes(x_root)
       .filter(function(d) { return !d.children; });

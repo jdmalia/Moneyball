@@ -67,10 +67,9 @@ rect {
 #viz_container {
 	position: relative;
 	width: 1340px;
-	display:block;
 	margin-right: auto;
 	margin-left: auto;
-	
+	text-align: center;
 }
 
 #tm_vis {
@@ -81,4 +80,12 @@ rect {
 #sp_vis {
 	float: left;
 	margin-right: 10px;
+}
+
+#season_slider {
+	margin-left: auto;
+	margin-right: auto;
+	position: relative;
+	width: 90%;
+	top: 570px;
 }
