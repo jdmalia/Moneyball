@@ -47,7 +47,7 @@ sliders.change(function(){
 	season_num = parseInt(sliders.val());
 	season = sprintf("%02d-%02d ", season_num, season_num+1);
 	season_heading = sprintf("20%02d-%02d ", season_num, season_num+1);
-	$("h3").text(season + " Season");
+	$("h3").text(season_heading + " Season");
 	update();
 });
 
