@@ -50,6 +50,11 @@ text {
 	font-size: 11px;
 }
 
+.textdiv {
+	font: 11px sans-serif;
+	text-align: left;
+}
+
 rect {
 	fill: none;
 }

@@ -331,13 +331,16 @@ function draw_treemap() {
 	  .on("mouseout", function(d) { details_off(d); });
 	  
 	
-	cell.append("svg:text")
-	  .attr("x", function(d) { return 5; })
-	  .attr("y", function(d) { return 10; })
-	 .attr("dy", ".35em")
-	  .append("tspan")
-	  .text(function(d) { return tm_label(d); })
-	  .style("opacity", .99)
+	cell.append("foreignObject")
+		.attr("x", function(d) { return 5; })
+		.attr("y", function(d) { return 5; })
+	   .attr("dy", ".35em")
+	    .attr("width", function(d) { return d.dx - 1; })
+	    .attr("height", function(d) { return d.dy - 1; })
+	    .append("xhtml:div")
+			.attr("dy", ".35em")
+			.html(function(d) { return tm_label(d); })
+			.attr("class","textdiv");
 }
 
 // load data
