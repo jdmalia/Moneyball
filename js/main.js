@@ -59,16 +59,16 @@ var sp_svg;
 
 /* TREEMAP DIV */
 var tm_div;
-	
-	var treemap = d3.layout.treemap()
-		.size([width, height])
-		.sticky(true)
-		.value(function(d) { return d[season+"Salary"]; });
 		
 	/* Tree map globals */	
 	var x_root, x_node, zoomed_node, 
 		nba_dta, nba_nodes,
 		node_map = new Array();
+		
+	var treemap = d3.layout.treemap()
+		.size([width, height])
+		.sticky(true)
+		.value(function(d) { return d[season+"Salary"]; });
 
 /* Tooltip */
 var tooltip = d3.select("body").append("div")
