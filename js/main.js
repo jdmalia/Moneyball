@@ -269,11 +269,14 @@ function draw_treemap(opacity) {
 	var nodes = treemap.nodes(x_root).filter(function(d) { return (!d.children ); });
 	  
 	nba_nodes = nodes;
+	
+	var i=1;
 
 	var cell = tm_div.selectAll("g")
 		.data(nodes)
 	  .enter().append("svg:g")
 		.attr("class", "cell")
+		.attr("id", function(d) {i++; node_map[d.parent.name] = d; return ("node"+d.x+i+""+d.y+i);})
 		.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
 		.on("click", function(d) { 
 			switch(zoom_level) {
