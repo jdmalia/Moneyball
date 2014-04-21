@@ -15,8 +15,10 @@ var nba_data, nba_nodes;
 var division_map = new Array();
 var teams = new Array();
 
-var small_dot = 5;
-var big_dot = 8;
+var smallest_dot = 5;
+var small_dot = 7;
+var big_dot = 10;
+var old_dot;
 
 var playing = false;
 var zoomed = false;
@@ -140,7 +142,27 @@ function update() {
 	dots = svg.selectAll(".dot")
 	  .data(nba_data).transition(5000);
 	  
-	dots.attr("cx", xMap).attr("cy", yMap);
+	dots
+		.attr("cx", xMap)
+		.attr("cy", yMap)
+		.attr("r", function(d) {
+		  if (d[season+"PO"] == 2) return big_dot;
+		  return small_dot;
+		})
+		.style("stroke-width", function(d) { 
+	  		switch (d[season+"PO"]){
+				case 0:
+					return 0;
+				case 1:
+					return 1.5;
+				case 2:
+					return 4;
+			}
+	  	})
+		.style("stroke-dasharray", function(d) {
+		  if (d[season+"PO"] == 2) return "3";
+		  return 0;
+	  });
 	
 	$(".chart").remove();
 	div2 = d3.select("#tm_vis").append("div")
@@ -166,6 +188,8 @@ function update() {
 }
 
 function details_on_demand(d) {
+	
+	old_dot = document.getElementById("sp"+d.Team).getAttribute("r");
 	  
 	document.getElementById("tm"+d.Team).style.border = "1px solid black";
 	document.getElementById("tm"+d.Team).style.zIndex = "40000";
@@ -195,7 +219,7 @@ function details_on_demand(d) {
 	
 function details_off(d) {
   
-  if(!zoomed) document.getElementById("sp"+d.Team).setAttribute("r",small_dot);
+  if(!zoomed) document.getElementById("sp"+d.Team).setAttribute("r",old_dot);
   document.getElementById("sp"+d.Team).style.zIndex = "30000";
   document.getElementById("tm"+d["Team"]).style.border = "1px solid white";
   document.getElementById("tm"+d["Team"]).style.zIndex = "20000";
@@ -238,10 +262,17 @@ function genJSON(csvData, groups) {
 }
 
 function wl_color(d) {
-	if (d[season+"Win"] > d[season+"Loss"]) 
-		return hsv_to_hex(120, d[season+"Win"]/d[season+"Loss"]*15, 100);
-	
-	return hsv_to_hex(0, d[season+"Loss"]/d[season+"Win"]*15, 100);
+	var encoding;
+	if (d[season+"Win"] > d[season+"Loss"]) {
+		encoding = d[season+"Win"]/d[season+"Loss"]*15;
+		if (encoding > 100) encoding = 100;
+		return hsv_to_hex(120, encoding, 100);
+	}
+	else {
+		encoding = d[season+"Loss"]/d[season+"Win"]*15;
+		if (encoding > 100) encoding = 100;
+		return hsv_to_hex(0, encoding, 100);
+	}
 }
 
 function hsv_to_hex(hue, sat, val) {
@@ -373,8 +404,12 @@ function draw_treemap(opacity) {
 	  .style("fill", function(d) { return color(d.Division); })
 	  .style("opacity", opacity) 
 	  .attr("id", function(d) {return "tm"+d.Team;})
-	  .on("mouseover", function(d) { details_on_demand(d); })
-	  .on("mouseout", function(d) { details_off(d); });
+	  .on("mouseover", function(d) { 
+	  		this.style.opacity = 0.7;
+	  		details_on_demand(d); })
+	  .on("mouseout", function(d) { 
+	  		this.style.opacity = 1;
+	  		details_off(d); });
 	  
 	
 	cell.append("foreignObject")
@@ -402,9 +437,11 @@ d3.csv("../data/nba.csv", function(error, data) {
 		  salary = sprintf("%02d-%02d Salary", i, i+1);
 		  win = sprintf("%02d-%02d Win", i, i+1);
 		  loss = sprintf("%02d-%02d Loss", i, i+1);
+		  playoff = sprintf("%02d-%02d PO", i, i+1);
 		  d[salary] = (+d[salary])/1000000;
 		  d[win] = +d[win];
 		  d[loss] = +d[loss];	  
+		  d[playoff] = +d[playoff];
 	  }
 	});
 
@@ -443,10 +480,27 @@ d3.csv("../data/nba.csv", function(error, data) {
 	.enter().append("circle")
 	  .attr("id", function(d) {return "sp"+d["Team"];})
 	  .attr("class", "dot")
-	  .attr("r", small_dot)
+	  .attr("r", function(d) {
+		  if (d[season+"PO"] == 2) return big_dot;
+		  return small_dot;
+		})
 	  .attr("cx", xMap)
 	  .attr("cy", yMap)
 	  .style("fill", function(d) { return color(cValue(d));}) 
+	  .style("stroke-width", function(d) { 
+	  		switch (d[season+"PO"]){
+				case 0:
+					return 0;
+				case 1:
+					return 1.5;
+				case 2:
+					return 4;
+			}
+	  	})
+	  .style("stroke-dasharray", function(d) {
+		  if (d[season+"PO"] == 2) return "3";
+		  return 0;
+	  })
 	  .on("mouseover", function(d) { details_on_demand(d); })
 	  .on("mouseout", function(d) { details_off(d); });
 	  
