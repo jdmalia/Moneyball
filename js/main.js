@@ -1,7 +1,10 @@
 /* REFERENCES:
-		Example based on http://bl.ocks.org/mbostock/3887118 
-		Colors palette: http://colorbrewer2.org/
-		Tooltip:  http://www.d3noob.org/2013/01/adding-tooltips-to-d3js-graph.html
+	Scatterplot: http://bl.ocks.org/mbostock/3887118 
+	Zoomable treemap: http://mbostock.github.io/d3/talk/20111018/treemap.html
+	Colors palette: http://colorbrewer2.org/
+    CSV to flare JSON: http://www.delimited.io/blog/2013/11/2/creating-nested-json-for-d3
+	HSV to RGB/HEX:  http://stackoverflow.com/questions/17242144/javascript-convert-hsb-hsv-color-to-rgb-accurately
+	Tooltip:  http://www.d3noob.org/2013/01/adding-tooltips-to-d3js-graph.html
 */
 
 /* Sizing of scatterplot and treemap */
@@ -32,52 +35,41 @@ var season_heading = sprintf("20%02d-%02d ", season_num, season_num+1);
 var division_map = new Array();
 var teams = new Array();
 
-/* SCATTERPLOT SVG */
-var sp_svg = d3.select("#sp_vis").append("svg")
-	 .style("float", "left")
-     .attr("width", width + margin.left + margin.right)
-     .attr("height", height + margin.top + margin.bottom)
-   .append("g")
-     .attr("transform", "translate(" + margin.left + "," + (margin.top-20) + ")");
 
-/* Scatterplot globals */
-var small_dot = 8, big_dot = 9, old_dot, old_opacity = 1;
-// Encoding for playoffs/champion
-var border_weights = [0.5, 2, 4],
-	dasharrays = ["0", "0", "3"],
-	radii = [small_dot, small_dot, big_dot];
-// setup x 
-var xValue = function(d) { return d[season+"Salary"];}, 
-    xScale = d3.scale.linear().range([0, width]), 
-    xMap = function(d) { return xScale(xValue(d));}, 
-    xAxis = d3.svg.axis().scale(xScale).orient("bottom");
-// setup y
-var yValue = function(d) { return d[season+"Win"];}, 
-    yScale = d3.scale.linear().range([height, 0]), 
-    yMap = function(d) { return yScale(yValue(d));}, 
-    yAxis = d3.svg.axis().scale(yScale).orient("left");
+/* SCATTERPLOT SVG */
+var sp_svg;
+
+	/* Scatterplot globals */
+	var small_dot = 8, big_dot = 9, old_dot, old_opacity = 1;
+	// Encoding for playoffs/champion
+	var border_weights = [0.5, 2, 4],
+		dasharrays = ["0", "0", "3"],
+		radii = [small_dot, small_dot, big_dot];
+	// setup x 
+	var xValue = function(d) { return d[season+"Salary"];}, 
+		xScale = d3.scale.linear().range([0, width]), 
+		xMap = function(d) { return xScale(xValue(d));}, 
+		xAxis = d3.svg.axis().scale(xScale).orient("bottom");
+	// setup y
+	var yValue = function(d) { return d[season+"Win"];}, 
+		yScale = d3.scale.linear().range([height, 0]), 
+		yMap = function(d) { return yScale(yValue(d));}, 
+		yAxis = d3.svg.axis().scale(yScale).orient("left");
 
 
 /* TREEMAP DIV */
-var tm_div = d3.select("#tm_vis").append("div")
-    .attr("class", "chart")
-    .style("width", (width + margin.left + margin.right) + "px")
-    .style("height", (height + margin.top + margin.bottom) + "px")
-  .append("svg:svg")
-    .style("width", (width) + "px")
-    .style("height", (height) + "px")
-  .append("svg:g")
-    .attr("transform", "translate(.5,.5)");
+var tm_div;
 	
-var treemap = d3.layout.treemap()
-    .size([width, height])
-    .sticky(true)
-    .value(function(d) { return d[season+"Salary"]; });
-	
-/* Tree map globals */	
-var x_root, x_node, zoomed_node, 
-	nba_dta, nba_nodes,
-	node_map = new Array();
+	var treemap = d3.layout.treemap()
+		.size([width, height])
+		.sticky(true)
+		.value(function(d) { return d[season+"Salary"]; });
+		
+	/* Tree map globals */	
+	var x_root, x_node, zoomed_node, 
+		nba_dta, nba_nodes,
+		node_map = new Array();
+		
 
 /* Tooltip */
 var tooltip = d3.select("body").append("div")
@@ -88,6 +80,7 @@ var tooltip = d3.select("body").append("div")
 var curr_fmt = d3.format("$,.0f");
 
 function init() {
+	
 	/* Slider label */
 	$("h3").text(season_heading + " Season");
 	
@@ -159,9 +152,26 @@ function init() {
 	
 	  
 		<!----------------------SCATTERPLOT-------------------------->
+		sp_svg = d3.select("#sp_vis").append("svg")
+	 		.style("float", "left")
+     		.attr("width", width + margin.left + margin.right)
+     		.attr("height", height + margin.top + margin.bottom)
+ 		  .append("g")
+     		.attr("transform", "translate(" + margin.left + "," + (margin.top-20) + ")");
+			
 		draw_scatterplot();
 		  
 		<!------------------------TREEMAP---------------------------->
+		tm_div = d3.select("#tm_vis").append("div")
+    		.attr("class", "chart")
+    		.style("width", (width + margin.left + margin.right) + "px")
+    		.style("height", (height + margin.top + margin.bottom) + "px")
+  		 .append("svg:svg")
+    		.style("width", (width) + "px")
+    		.style("height", (height) + "px")
+  		 .append("svg:g")
+    		.attr("transform", "translate(.5,.5)");
+
 		draw_treemap(1);
 	  
 	});
@@ -254,6 +264,7 @@ function draw_scatterplot() {
 }
 
 function draw_treemap(opacity) {
+	
 	// Converting the data
 	var preppedData = genJSON(nba_data, ['Conference', 'Division','Team']);
 	x_root = preppedData;
@@ -318,6 +329,7 @@ function draw_treemap(opacity) {
 	It works by setting up an interval that updates and changes the slider every 2 seconds
 	*/
 function play() {
+	
 	if(!playing && season_num <= 12) {
 		if (season_num == 12) season_num = 0;  // start back at first season if user clicks play at season 12
 		playing = true;
@@ -328,7 +340,8 @@ function play() {
 			$(".slider").change();
 		}, 2000);
 		$("#play_button").text("Stop");
-	} else {
+	} 
+	else {
 		playing = false;
 		clearInterval(my_interval);
 		$("#play_button").text("Play");
@@ -356,7 +369,6 @@ function update() {
 	    });
 	
 	// TREEMAP
-	
 	// Delete the old treemap.
 	$(".chart").remove();
 	
