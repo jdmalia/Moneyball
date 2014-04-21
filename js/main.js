@@ -507,7 +507,11 @@ function genJSON(csvData, groups) {
   return nest({}, 0);
 }
 
-/* Encodes win/loss color */
+/* Encodes win/loss color:
+   -  Green = more wins than losses
+   -  Red = more losses than wins
+   -  Saturation = W/L (green) or L/W (red) ratio (the more lopsided the ratio,
+      the more saturated the node  */
 function wl_color(d) {
 	var encoding;
 	if (d[season+"Win"] > d[season+"Loss"]) {
@@ -557,79 +561,100 @@ function tm_label(d) {
 	return res;
 }
 
-/* Zoom function of treemap */
+/* Zoom function of treemap.
+   The function cycles through three levels of zoom:
+   0 - League
+   1 - Division
+   2 - Team
+   At the league level, it colors nodes (teams) by division.
+   At the division and team level, it colors nodes by their win loss ratio (see wl_color()).
+ */
 function zoom(d, duration) {
 
-  zoom_level++;
-  zoom_level %= 3;
-  
-  if(zoom_level == 0 || zoom_level == 1) zoomed = !zoomed;
+	// Cycle through the levels
+	zoom_level++;
+	zoom_level %= 3;
 	
-  zoomed_node = d; 
-  
-  if (!d.dx) {
+	// Set flag to determine coloring behavior
+	if(zoom_level == 0 || zoom_level == 1) zoomed = !zoomed;
+	
+	// Keep track of zoomed node in case the season is changed while zoomed in, so we can zoom back 
+	// in on the appropriate node;
+	zoomed_node = d; 
+	
+	// Fixes an error caused by changing season while zooming in.
+	if (!d.dx) {
 	  d.dx = 590;
 	  d.dy = 430;
 	  d.x = 0;
 	  d.y = 0;
-  }
-  
-  var kx = width / d.dx, ky = height / d.dy;
-  
-  x.domain([d.x, d.x + d.dx]);
-  y.domain([d.y, d.y + d.dy]);
-
-  var t = tm_div.selectAll("g.cell").transition()
+	}
+	
+	var kx = width / d.dx, ky = height / d.dy;
+	
+	x.domain([d.x, d.x + d.dx]);
+	y.domain([d.y, d.y + d.dy]);
+	
+	var t = tm_div.selectAll("g.cell").transition()
 	  .duration(duration)
 	  .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
-
-  t.select("rect")
+	
+	t.select("rect")
 	  .attr("width", function(d) { return kx * d.dx - 1; })
 	  .attr("height", function(d) { return ky * d.dy - 1; })
 	  .style("opacity", 1)
 	  .style("fill", function(d) { return ( zoomed ?   wl_color(d) : color(d.Division) ) });
 	  
-  t.select("text")
+	t.select("text")
 	  .attr("x", function(d) { return 5 })
 	  .attr("y", function(d) { return 10; })
-	  		
-  t.select(".textdiv")
+			
+	t.select(".textdiv")
 	  .style("opacity", 1);
-	    
-  if(zoom_level == 1) {
-	  current_division = d.name;
-	  teams.forEach(function (team) {
-		  if(division_map[team] != d.name) {
-			  document.getElementById("sp"+team).setAttribute("opacity", .1);
-			  document.getElementById("l"+division_map[team]).setAttribute("opacity", .1);
-		  } else {
-			  document.getElementById("sp"+team).setAttribute("r",small_dot);
-			  document.getElementById("sp"+team).setAttribute("opacity", 1);
-		  }
-	  });
-  } 
-  else if (zoom_level == 2) {
-	  current_team = d.name;
-	  teams.forEach(function (team) {
-		 document.getElementById("sp"+team).setAttribute("r", small_dot); 
-		 document.getElementById("sp"+team).setAttribute("opacity", .1);
-		 document.getElementById("l"+division_map[team]).setAttribute("opacity", .1);
-		 if(team == d.name){
+		
+	switch(zoom_level) {
+		
+		// League
+		case 0:
+		  teams.forEach(function (team) {
+				  document.getElementById("l"+division_map[team]).setAttribute("opacity", 1);
+				  document.getElementById("sp"+team).setAttribute("opacity", 1);
+				  document.getElementById("sp"+team).setAttribute("r", small_dot);
+		  });
+		  break;
+		  
+	    // Division
+	    case 1:
+		  current_division = d.name;
+		  teams.forEach(function (team) {
+			  if(division_map[team] != d.name) {
+				  document.getElementById("sp"+team).setAttribute("opacity", .1);
+				  document.getElementById("l"+division_map[team]).setAttribute("opacity", .1);
+			  } else {
+				  document.getElementById("sp"+team).setAttribute("r",small_dot);
+				  document.getElementById("sp"+team).setAttribute("opacity", 1);
+			  }
+		  });
+			  break;
+		
+		// Team
+		case 2:
+		  current_team = d.name;
+		  teams.forEach(function (team) {
 			 document.getElementById("sp"+team).setAttribute("r", small_dot); 
-	  		 document.getElementById("sp"+team).setAttribute("opacity", 1);
-		 } 
-	  });
-  }
-  else {
-	  teams.forEach(function (team) {
-			  document.getElementById("l"+division_map[team]).setAttribute("opacity", 1);
-			  document.getElementById("sp"+team).setAttribute("opacity", 1);
-			  document.getElementById("sp"+team).setAttribute("r", small_dot);
-	  });
-  }
-
-  x_node = d;
-  d3.event.stopPropagation();
+			 document.getElementById("sp"+team).setAttribute("opacity", .1);
+			 document.getElementById("l"+division_map[team]).setAttribute("opacity", .1);
+			 if(team == d.name){
+				 document.getElementById("sp"+team).setAttribute("r", small_dot); 
+				 document.getElementById("sp"+team).setAttribute("opacity", 1);
+			 } 
+		  });
+		  break;
+	
+	}
+	
+	x_node = d;
+	d3.event.stopPropagation();
   
 }
 
