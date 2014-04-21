@@ -133,13 +133,11 @@ function init() {
 	
 	// Extracting all the data
 	d3.csv("../data/nba.csv", function(error, data) {
-	
 		nba_data = data;
-	   // getting data for scatterplot
 		data.forEach(function(d) {
-		  teams.push(d.Team);
-		  division_map[d.Team] = d.Division;
-		  for (i = 1; i < 13; ++i) {
+			teams.push(d.Team);
+			division_map[d.Team] = d.Division;
+			for (i = 1; i < 13; ++i) {
 			  salary = sprintf("%02d-%02d Salary", i, i+1);
 			  win = sprintf("%02d-%02d Win", i, i+1);
 			  loss = sprintf("%02d-%02d Loss", i, i+1);
@@ -148,7 +146,7 @@ function init() {
 			  d[win] = +d[win];
 			  d[loss] = +d[loss];	  
 			  d[playoff] = +d[playoff];
-		  }
+			}
 		});
 	
 	  
@@ -172,11 +170,10 @@ function init() {
 			.style("height", (height) + "px")
 		  .append("svg:g")
 			.attr("transform", "translate(.5,.5)");
-
+	
 		draw_treemap(1);
-	  
+	
 	});
-
 }
 
 function draw_scatterplot() {
