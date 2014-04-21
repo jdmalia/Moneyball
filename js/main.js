@@ -314,15 +314,15 @@ function draw_treemap(opacity) {
 	cell.append("foreignObject")
 		.attr("x", function(d) { return 5; })
 		.attr("y", function(d) { return 5; })
-	   .attr("dy", ".35em")
-	    .attr("width", function(d) { return d.dx - 1; })
-	    .attr("height", function(d) { return d.dy - 1; })
-	    .append("xhtml:div")
-			.attr("dy", ".35em")
-			.html(function(d) { return tm_label(d); })
-			.style("opacity", opacity)
-			.style("z-index", 6)
-			.attr("class","textdiv");
+		.attr("dy", ".35em")
+		.attr("width", function(d) { return d.dx - 1; })
+		.attr("height", function(d) { return d.dy - 1; })
+	  .append("xhtml:div")
+		.attr("dy", ".35em")
+	  .html(function(d) { return tm_label(d); })
+		.style("opacity", opacity)
+		.style("z-index", 6)
+		.attr("class","textdiv");
 }
 
 /*	
