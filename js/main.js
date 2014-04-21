@@ -15,6 +15,7 @@ var current_team;
 
 var nba_data, nba_nodes;
 var division_map = new Array();
+var node_map = new Array();
 var teams = new Array();
 
 var smallest_dot = 5;
@@ -419,11 +420,14 @@ function draw_treemap(opacity) {
       .filter(function(d) { return (!d.children ); });
 	  
 	nba_nodes = nodes;
+	
+	var i=1;
 
 	var cell = div2.selectAll("g")
 	  .data(nodes)
 	.enter().append("svg:g")
 	  .attr("class", "cell")
+	  .attr("id", function(d) {i++; node_map[d.parent.name] = d; return ("node"+d.x+i+""+d.y+i);})
 	  .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
 	  .on("click", function(d) { 
 	  	if(zoom_level == 0) 
@@ -532,7 +536,18 @@ d3.csv("../data/nba.csv", function(error, data) {
 		  return dasharrays[d[season+"PO"]]; 
 	  })
 	  .on("mouseover", function(d) { details_on_demand(d); })
-	  .on("mouseout", function(d) { details_off(d); });
+	  .on("mouseout", function(d) { details_off(d); })
+	  .on("click", function(d) { 
+	    console.log(node_map[d.Team]);
+	    var tm_node = node_map[d.Team];
+		console.log(tm_node);
+	    if(zoom_level == 0) 
+			return zoom(tm_node.parent.parent, 450); 
+		else if (zoom_level == 1) 
+			return zoom(tm_node.parent, 450);
+		else
+			return zoom(x_root, 450);
+	  });
 	  
 	// draw legend
 	var legend = svg.selectAll(".legend")
