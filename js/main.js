@@ -8,6 +8,9 @@ var margin = {top: 40, right: 20, bottom: 30, left: 40},
     y = d3.scale.linear().range([0, height]);
 	
 var x_root, x_node;
+
+var zoomed_node;
+
 var nba_data, nba_nodes;
 var division_map = new Array();
 var teams = new Array();
@@ -15,9 +18,10 @@ var teams = new Array();
 var small_dot = 5;
 var big_dot = 8;
 
+var playing = false;
 var zoomed = false;
 
-var season_num = 7;
+var season_num = 1;
 var season = sprintf("%02d-%02d ", season_num, season_num+1);
 var season_heading = sprintf("20%02d-%02d ", season_num, season_num+1);
 $("h3").text(season_heading + " Season");
@@ -31,7 +35,7 @@ $("h3").text(season_heading + " Season");
 
 var sliders = $(".slider");
 sliders.noUiSlider({
-	start: [ 7 ],
+	start: [ 1 ],
     range: {
     		'min': 1, 
     		'max': 12,
@@ -48,9 +52,40 @@ sliders.change(function(){
 	season = sprintf("%02d-%02d ", season_num, season_num+1);
 	season_heading = sprintf("20%02d-%02d ", season_num, season_num+1);
 	$("h3").text(season_heading + " Season");
+	$("h3").css("margin-left", 65 + (season_num - 1)*1175/11);
+	if(season_num == 12) {
+		playing = false;
+		$("#play_button").text("Play");
+		clearInterval(my_interval);
+	}
 	update();
 });
 
+var my_interval;
+
+function play() {
+	if(!playing && season_num < 12) {
+		playing = true;
+		my_interval = setInterval(function(){
+			season_num++;
+			$(".slider").val(""+season_num);
+			$(".slider").change();
+					},1500);
+		$("#play_button").text("Stop");
+	} else {
+		playing = false;
+		clearInterval(my_interval);
+		$("#play_button").text("Play");
+	}
+}
+
+
+$("#play_button").on("click", play);
+$(".slider").on("click", function(e) {
+	playing = false;
+	clearInterval(my_interval);
+	$("#play_button").text("Play"); 
+});
 
 // setup x 
 var xValue = function(d) { return d[season+"Salary"];}, // data -> value
@@ -100,11 +135,10 @@ var tooltip = d3.select("body").append("div")
 var curr_fmt = d3.format("$,.0f");
 
 function update() {
-	console.log(season);
 	
 	//Scatterplot
 	dots = svg.selectAll(".dot")
-	  .data(nba_data).transition(1000);
+	  .data(nba_data).transition(5000);
 	  
 	dots.attr("cx", xMap).attr("cy", yMap);
 	
@@ -119,15 +153,15 @@ function update() {
   .append("svg:g")
     .attr("transform", "translate(.5,.5)");
 	
-	draw_treemap();	
+	draw_treemap(0);	
+	
 	
 	if(zoomed) {
-		teams.forEach(function (team) {
-			  document.getElementById("l"+division_map[team]).setAttribute("opacity", 1);
-			  document.getElementById("sp"+team).setAttribute("opacity", 1);
-			  document.getElementById("sp"+team).setAttribute("r", small_dot);
-	  });
-	  zoomed = false;
+		zoomed = false;
+		zoom(zoomed_node, 0);
+	} else {
+		zoomed = true;
+		zoom(x_root, 0);
 	}
 }
 
@@ -152,8 +186,8 @@ function details_on_demand(d) {
 	   
 	tooltip.html("<b>" + d["Team"] + "<b><br/>\t  Salary: <b>" + curr_fmt(xValue(d)*1000000)
 	+ "</b><br/>\t  Wins: <b>" + yValue(d) + "</b>; Losses: <b>" + d[season+"Loss"] + "</b>")
-	   .style("left",  d["Team"] ? (dot.getBoundingClientRect().left + 16) + "px": null)
-	   .style("top", d["Team"] ? (dot.getBoundingClientRect().top - 20) + "px": null)
+	   .style("left",  d["Team"] ? (d3.event.x + 8) + "px": null)
+	   .style("top", d["Team"] ? (d3.event.y - 25) + "px": null)
 	   .style("padding", "5px")
 	   .style("padding-left", "10px")
 	   .style("font-size", "11px");
@@ -251,8 +285,12 @@ function count(d) {
   return 1;
 }
 	  
-function zoom(d) {
+function zoom(d, duration) {
 	
+  zoomed = !zoomed;
+	
+  zoomed_node = d; 
+  
   if (!d.dx) {
 	  d.dx = 590;
 	  d.dy = 430;
@@ -266,21 +304,29 @@ function zoom(d) {
   y.domain([d.y, d.y + d.dy]);
 
   var t = div2.selectAll("g.cell").transition()
-	  .duration(450)
+	  .duration(duration)
 	  .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
 
   t.select("rect")
 	  .attr("width", function(d) { return kx * d.dx - 1; })
 	  .attr("height", function(d) { return ky * d.dy - 1; })
-	  .style("fill", function(d) { return ( zoomed ?  color(d.Division) : wl_color(d) ) });
+	  .style("fill", function(d) { return ( zoomed ?   wl_color(d) : color(d.Division) ) });
 	  
 
   t.select("text")
 	  .attr("x", function(d) { return 5 })
 	  .attr("y", function(d) { return 10; })
+	  	
+		
+  t.select(".textdiv")
 	  .style("opacity", 1);
+	    
+  t.select("rect")
+  	.style("opacity", 1);
+	
+ 
 	  
-  if(!zoomed) {
+  if(zoomed) {
 	  
 	  teams.forEach(function (team) {
 		  if(division_map[team] != d.name) {
@@ -302,10 +348,9 @@ function zoom(d) {
   x_node = d;
   d3.event.stopPropagation();
   
-  zoomed = !zoomed;
-}
+  }
 
-function draw_treemap() {
+function draw_treemap(opacity) {
 	// Converting the data
 	var preppedData = genJSON(nba_data, ['Conference', 'Division']);
 	x_root = preppedData;
@@ -320,12 +365,13 @@ function draw_treemap() {
 	.enter().append("svg:g")
 	  .attr("class", "cell")
 	  .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
-	  .on("click", function(d) { return zoom(x_node == d.parent ? x_root : d.parent); })
+	  .on("click", function(d) { return zoom(x_node == d.parent ? x_root : d.parent, 450); })
 	
 	cell.append("svg:rect")
 	  .attr("width", function(d) { return d.dx - 1; })
 	  .attr("height", function(d) { return d.dy - 1; })
 	  .style("fill", function(d) { return color(d.Division); })
+	  .style("opacity", opacity) 
 	  .attr("id", function(d) {return "tm"+d.Team;})
 	  .on("mouseover", function(d) { details_on_demand(d); })
 	  .on("mouseout", function(d) { details_off(d); });
@@ -340,6 +386,7 @@ function draw_treemap() {
 	    .append("xhtml:div")
 			.attr("dy", ".35em")
 			.html(function(d) { return tm_label(d); })
+			.style("opacity", opacity)
 			.attr("class","textdiv");
 }
 
@@ -428,6 +475,6 @@ d3.csv("../data/nba.csv", function(error, data) {
 	  
 	  <!------------------------TREEMAP---------------------------->
 
-	draw_treemap();
+	draw_treemap(1);
   	
 });

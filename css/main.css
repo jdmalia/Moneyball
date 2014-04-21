@@ -15,9 +15,21 @@ h2 {
 }
 
 h3 {
-  text-align: center;
-  font-size: 20px;
+  position: relative;
+  text-align: left;
+  font-size: 18px;
   margin-top: 14px;
+  margin-left: 50px;
+  top: 570px;
+}
+
+#play_button {
+  position: relative;
+  text-align: left;
+  float: left;
+  font-size: 18px;
+  margin-top: 26px;
+  margin-left: 5px;
 }
 
 .arrow-left {
@@ -95,7 +107,8 @@ rect {
 
 #season_slider {
 	position:  relative;
+	top: 570px;
 	width:  1200px;
-	margin-left:auto;
+	margin-left:80px;
 	margin-right:auto;
 }
