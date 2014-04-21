@@ -82,7 +82,8 @@ sliders.change(function(){
 var my_interval;
 
 function play() {
-	if(!playing && season_num < 12) {
+	if(!playing && season_num <= 12) {
+		if (season_num == 12) season_num = 0;
 		playing = true;
 		slider_hit = true;
 		my_interval = setInterval(function(){
