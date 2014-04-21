@@ -269,8 +269,7 @@ function draw_treemap(opacity) {
 	var preppedData = genJSON(nba_data, ['Conference', 'Division','Team']);
 	x_root = preppedData;
 
-	var nodes = treemap.nodes(x_root)
-      .filter(function(d) { return (!d.children ); });
+	var nodes = treemap.nodes(x_root).filter(function(d) { return (!d.children ); });
 	  
 	nba_nodes = nodes;
 	
@@ -325,9 +324,10 @@ function draw_treemap(opacity) {
 			.attr("class","textdiv");
 }
 
-/*	Function called whenever user hits the play button.  Also works for stop if already playing.
-	It works by setting up an interval that updates and changes the slider every 2 seconds
-	*/
+/*	
+Function called whenever user hits the play button.  Also works for stop if already playing.
+It works by setting up an interval that updates and changes the slider every 2 seconds
+*/
 function play() {
 	
 	if(!playing && season_num <= 12) {
@@ -348,9 +348,11 @@ function play() {
 	}
 }
 
-/*  Main update function used indirectly in play() and in the sliders change function.
-    Works by animating the transition of the scatterplot and redrawing the treemap at the
-	appropriate zoom level (League, Division, Team). */
+/*  
+Main update function used indirectly in play() and in the sliders change function.
+Works by animating the transition of the scatterplot and redrawing the treemap at the
+appropriate zoom level (League, Division, Team). 
+*/
 function update() {
 	
 	// SCATTERPLOT
@@ -398,9 +400,11 @@ function update() {
 	}
 }
 
-/* Function called on mouseover of SP dot or TM node.  
-   Makes the team's dot bigger, it's node brighter and provides details about the team via a tooltip.
-   Specifically shows team name, logo, salary, wins and losses */
+/* 
+Function called on mouseover of SP dot or TM node.  
+Makes the team's dot bigger, it's node brighter and provides details about the team via a tooltip.
+Specifically shows team name, logo, salary, wins and losses.
+*/
 function details_on_demand(d) {
 	
 	var sp_dot = document.getElementById("sp"+d.Team);
@@ -442,8 +446,10 @@ function details_on_demand(d) {
 	   .style("font-size", "11px");
 }
 
-/* Function called on mouseoff of SP dot or TM node.  
-   Resets what details_on_demand() did. */
+/* 
+Function called on mouseoff of SP dot or TM node.  
+Resets what details_on_demand() did. 
+*/
 function details_off(d) {
 	
 	var sp_dot = document.getElementById("sp"+d.Team);
@@ -519,11 +525,13 @@ function genJSON(csvData, groups) {
   return nest({}, 0);
 }
 
-/* Encodes win/loss color:
-   -  Green = more wins than losses
-   -  Red = more losses than wins
-   -  Saturation = W/L (green) or L/W (red) ratio (the more lopsided the ratio,
-      the more saturated the node  */
+/* 
+Encodes win/loss color:
+-  Green = more wins than losses
+-  Red = more losses than wins
+-  Saturation = W/L (green) or L/W (red) ratio (the more lopsided the ratio,
+   the more saturated the node  
+*/
 function wl_color(d) {
 	var encoding;
 	if (d[season+"Win"] > d[season+"Loss"]) {
@@ -573,13 +581,14 @@ function tm_label(d) {
 	return res;
 }
 
-/* Zoom function of treemap.
-   The function cycles through three levels of zoom:
+/* 
+Zoom function of treemap.
+The function cycles through three levels of zoom:
    0 - League
    1 - Division
    2 - Team
-   At the league level, it colors nodes (teams) by division.
-   At the division and team level, it colors nodes by their win loss ratio (see wl_color()).
+At the league level, it colors nodes (teams) by division.
+At the division and team level, it colors nodes by their win loss ratio (see wl_color()).
  */
 function zoom(d, duration) {
 
