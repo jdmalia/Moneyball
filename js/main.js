@@ -77,7 +77,7 @@ function play() {
 			season_num++;
 			$(".slider").val(""+season_num);
 			$(".slider").change();
-					},700);
+					},1500);
 		$("#play_button").text("Stop");
 	} else {
 		playing = false;
@@ -109,7 +109,7 @@ var yValue = function(d) { return d[season+"Win"];}, // data -> value
 
 // setup fill color
 var cValue = function(d) { return d.Division;},
-    color = d3.scale.ordinal().range(["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462"]);
+    color = d3.scale.ordinal().range(colorbrewer.Set3[6]);
 
 // add the sp graph canvas to its appropriate div
 var svg = d3.select("#sp_vis").append("svg")
@@ -145,7 +145,7 @@ function update() {
 	
 	//Scatterplot
 	dots = svg.selectAll(".dot")
-	  .data(nba_data).transition(800);
+	  .data(nba_data).transition(500);
 	  
 	dots
 		.attr("cx", xMap)
@@ -189,22 +189,25 @@ function details_on_demand(d) {
 	  
 	document.getElementById("tm"+d.Team).style.border = "1px solid black";
 	document.getElementById("tm"+d.Team).style.zIndex = "40000";
+	document.getElementById("tm"+d.Team).style.opacity = ".7";
 	document.getElementById("sp"+d.Team).setAttribute("r", big_dot);
 	document.getElementById("sp"+d.Team).style.zIndex = "100000";
+	
+    //document.getElementById("tm"+d.Team).style.stroke = "#000";
 	
 	var dot = document.getElementById("sp"+d.Team);
 	
 	tooltip.transition()
 	   .duration(100)
 	   .style("opacity", .85)
-	   .style("background", "#090909")
+	   .style("background", "#0b0b0d")
 	   .style("border", "2px solid black")
 	   .style("color", "#FFFFFF")
-	   .style("max-width", "115px")
+	   .style("max-width", "auto")
 	   .style("height", "auto");
 	   
 	   
-	tooltip.html("<b>" + d["Team"] + "<b><br/>\t  Salary: <b>" + curr_fmt(xValue(d)*1000000)
+	tooltip.html("<img src='" + logos[d.Team] + "' width='50' height='50' style='float: left; padding-right: 10px; vertical-align: middle'><b>" + d["Team"] + "<b><br/><br/>\t  Salary: <b>" + curr_fmt(xValue(d)*1000000)
 	+ "</b><br/>\t  Wins: <b>" + yValue(d) + "</b>; Losses: <b>" + d[season+"Loss"] + "</b>")
 	   .style("left",  d["Team"] ? (d3.event.x + 8) + "px": null)
 	   .style("top", d["Team"] ? (d3.event.y - 25) + "px": null)
@@ -219,6 +222,8 @@ function details_off(d) {
   document.getElementById("sp"+d.Team).style.zIndex = "30000";
   document.getElementById("tm"+d["Team"]).style.border = "1px solid white";
   document.getElementById("tm"+d["Team"]).style.zIndex = "20000";
+  document.getElementById("tm"+d.Team).style.opacity = "1";
+  //document.getElementById("tm"+d.Team).style.stroke = "#FFF";
   
   tooltip.transition()
 	   .duration(100)
