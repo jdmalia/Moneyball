@@ -644,8 +644,8 @@ function zoom(d, duration) {
 		  });
 		  break;
 		  
-	    // Division
-	    case 1:
+		// Division
+		case 1:
 		  current_division = d.name;
 		  teams.forEach(function (team) {
 			  if(division_map[team] != d.name) {
