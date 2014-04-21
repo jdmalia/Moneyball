@@ -125,3 +125,7 @@ rect {
 	margin-left:80px;
 	margin-right:auto;
 }
+
+.label {
+	font: 12px sans-serif;
+}
