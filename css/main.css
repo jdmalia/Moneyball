@@ -50,6 +50,13 @@ h3 {
 
 .dot {
   stroke: #000;
+  position: relative;
+  z-index: 0;
+}
+
+.dot:hover {
+	display: block;
+	z-index: 9999;
 }
 
 .chart {

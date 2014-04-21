@@ -10,6 +10,8 @@ var margin = {top: 40, right: 20, bottom: 30, left: 40},
 var x_root, x_node;
 
 var zoomed_node;
+var current_division;
+var current_team;
 
 var nba_data, nba_nodes;
 var division_map = new Array();
@@ -186,15 +188,15 @@ function details_on_demand(d) {
 	
 	old_dot = document.getElementById("sp"+d.Team).getAttribute("r");
 	  
-	document.getElementById("tm"+d.Team).style.border = "1px solid black";
-	document.getElementById("tm"+d.Team).style.zIndex = "40000";
 	document.getElementById("tm"+d.Team).style.opacity = ".7";
 	document.getElementById("sp"+d.Team).setAttribute("r", big_dot);
-	document.getElementById("sp"+d.Team).style.zIndex = "100000";
 	
-    //document.getElementById("tm"+d.Team).style.stroke = "#000";
-	
-	var dot = document.getElementById("sp"+d.Team);
+    teams.forEach(function(team) {
+		document.getElementById("sp"+team).setAttribute("opacity", .1);
+		if (team == d.Team) {
+			document.getElementById("sp"+team).setAttribute("opacity", 1);
+		}
+	});
 	
 	tooltip.transition()
 	   .duration(100)
@@ -206,21 +208,38 @@ function details_on_demand(d) {
 	   .style("height", "auto");
 	   
 	   
-	tooltip.html("<img src='" + logos[d.Team] + "' width='50' height='50' style='float: left; padding-right: 10px; vertical-align: middle'><b>" + d["Team"] + "<b><br/><br/>\t  Salary: <b>" + curr_fmt(xValue(d)*1000000)
-	+ "</b><br/>\t  Wins: <b>" + yValue(d) + "</b>; Losses: <b>" + d[season+"Loss"] + "</b>")
-	   .style("left",  d["Team"] ? (d3.event.x + 8) + "px": null)
-	   .style("top", d["Team"] ? (d3.event.y - 25) + "px": null)
+	tooltip.html(
+	      "<img src='" + logos[d.Team] + "' width='50' height='50' style='float: left; padding-right: 10px; vertical-align: middle'>" +
+		  "<b>" + d["Team"] + "<b><br/><br/>\t  Salary: <b>" + curr_fmt(xValue(d)*1000000) + "</b><br/>\t  Wins: <b>" + yValue(d) + 
+		  "</b>; Losses: <b>" + d[season+"Loss"] + "</b>")
+	   .style("left",  d["Team"] ? (d3.event.x - 90) + "px": null)
+	   .style("top", d["Team"] ? (d3.event.y - 70) + "px": null)
 	   .style("padding", "5px")
 	   .style("padding-left", "10px")
 	   .style("font-size", "11px");
 }
 	
 function details_off(d) {
+	
+   if (zoom_level == 0) {
+	   teams.forEach(function(team) {
+			document.getElementById("sp"+team).setAttribute("opacity", 1);
+		});
+   } else if (zoom_level == 1) {
+	   teams.forEach(function(team) {
+			if(division_map[team] == current_division) 
+				document.getElementById("sp"+team).setAttribute("opacity", 1);
+		});
+   } else {
+	   teams.forEach(function(team) {
+			document.getElementById("sp"+team).setAttribute("opacity", .1);
+		});
+	   document.getElementById("sp"+current_team).setAttribute("opacity", 1);
+   }
   
   if(!zoomed) document.getElementById("sp"+d.Team).setAttribute("r",old_dot);
-  document.getElementById("sp"+d.Team).style.zIndex = "30000";
   document.getElementById("tm"+d["Team"]).style.border = "1px solid white";
-  document.getElementById("tm"+d["Team"]).style.zIndex = "20000";
+  document.getElementById("tm"+d["Team"]).style.zIndex = "5";
   document.getElementById("tm"+d.Team).style.opacity = "1";
   //document.getElementById("tm"+d.Team).style.stroke = "#FFF";
   
@@ -355,22 +374,25 @@ function zoom(d, duration) {
 	  .style("opacity", 1);
 	    
   if(zoom_level == 1) {
+	  current_division = d.name;
 	  teams.forEach(function (team) {
 		  if(division_map[team] != d.name) {
-			  document.getElementById("sp"+team).setAttribute("opacity", .2);
-			  document.getElementById("l"+division_map[team]).setAttribute("opacity", .2);
+			  document.getElementById("sp"+team).setAttribute("opacity", .1);
+			  document.getElementById("l"+division_map[team]).setAttribute("opacity", .1);
 		  } else {
-			  document.getElementById("sp"+team).setAttribute("r", big_dot);
+			  document.getElementById("sp"+team).setAttribute("r",small_dot);
+			  document.getElementById("sp"+team).setAttribute("opacity", 1);
 		  }
 	  });
   } 
   else if (zoom_level == 2) {
+	  current_team = d.name;
 	  teams.forEach(function (team) {
 		 document.getElementById("sp"+team).setAttribute("r", small_dot); 
-		 document.getElementById("sp"+team).setAttribute("opacity", .2);
-		 document.getElementById("l"+division_map[team]).setAttribute("opacity", .2);
+		 document.getElementById("sp"+team).setAttribute("opacity", .1);
+		 document.getElementById("l"+division_map[team]).setAttribute("opacity", .1);
 		 if(team == d.name){
-			 document.getElementById("sp"+team).setAttribute("r", big_dot); 
+			 document.getElementById("sp"+team).setAttribute("r", small_dot); 
 	  		 document.getElementById("sp"+team).setAttribute("opacity", 1);
 		 } 
 	  });
@@ -418,6 +440,7 @@ function draw_treemap(opacity) {
 	  .attr("height", function(d) { return d.dy - 1; })
 	  .style("fill", function(d) { return color(d.Division); })
 	  .style("opacity", opacity) 
+	  .style("z-index", 5)
 	  .attr("id", function(d) {return "tm"+d.Team;})
 	  .on("mouseover", function(d) { 
 	  		this.style.opacity = 0.7;
@@ -437,6 +460,7 @@ function draw_treemap(opacity) {
 			.attr("dy", ".35em")
 			.html(function(d) { return tm_label(d); })
 			.style("opacity", opacity)
+			.style("z-index", 6)
 			.attr("class","textdiv");
 }
 
