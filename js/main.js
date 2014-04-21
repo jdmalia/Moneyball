@@ -172,7 +172,6 @@ function init() {
 			.attr("transform", "translate(.5,.5)");
 	
 		draw_treemap(1);
-	
 	});
 }
 
