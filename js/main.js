@@ -77,7 +77,7 @@ function play() {
 			season_num++;
 			$(".slider").val(""+season_num);
 			$(".slider").change();
-					},1500);
+					}, 2000);
 		$("#play_button").text("Stop");
 	} else {
 		playing = false;
@@ -105,7 +105,6 @@ var yValue = function(d) { return d[season+"Win"];}, // data -> value
     yScale = d3.scale.linear().range([height, 0]), // value -> display
     yMap = function(d) { return yScale(yValue(d));}, // data -> display
     yAxis = d3.svg.axis().scale(yScale).orient("left");
-
 
 // setup fill color
 var cValue = function(d) { return d.Division;},
@@ -145,17 +144,15 @@ function update() {
 	
 	//Scatterplot
 	dots = svg.selectAll(".dot")
-	  .data(nba_data).transition(500);
-	  
-	dots
+	    .data(nba_data).transition(400)
 		.attr("cx", xMap)
 		.attr("cy", yMap)
 		.attr("r", function(d) {
 		  return radii[d[season+"PO"]];
 		})
 		.style("stroke-width", function(d) { 
-	  		return border_weights[d[season+"PO"]];
-	  	})
+			return border_weights[d[season+"PO"]];
+		})
 	  .style("stroke-dasharray", function(d) {
 		  return dasharrays[d[season+"PO"]]; 
 	  });
@@ -342,24 +339,17 @@ function zoom(d, duration) {
   t.select("rect")
 	  .attr("width", function(d) { return kx * d.dx - 1; })
 	  .attr("height", function(d) { return ky * d.dy - 1; })
+	  .style("opacity", 1)
 	  .style("fill", function(d) { return ( zoomed ?   wl_color(d) : color(d.Division) ) });
 	  
-
   t.select("text")
 	  .attr("x", function(d) { return 5 })
 	  .attr("y", function(d) { return 10; })
-	  	
-		
+	  		
   t.select(".textdiv")
 	  .style("opacity", 1);
 	    
-  t.select("rect")
-  	.style("opacity", 1);
-	
- 
-	  
   if(zoomed) {
-	  
 	  teams.forEach(function (team) {
 		  if(division_map[team] != d.name) {
 			  document.getElementById("sp"+team).setAttribute("opacity", .2);
