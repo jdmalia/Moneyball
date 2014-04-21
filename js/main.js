@@ -538,11 +538,11 @@ d3.csv("../data/nba.csv", function(error, data) {
 	  .on("mouseover", function(d) { details_on_demand(d); })
 	  .on("mouseout", function(d) { details_off(d); })
 	  .on("click", function(d) { 
-	    console.log(node_map[d.Team]);
 	    var tm_node = node_map[d.Team];
-		console.log(tm_node);
-	    if(zoom_level == 0) 
-			return zoom(tm_node.parent.parent, 450); 
+	    if(zoom_level == 0) {
+		    zoom_level = 1;
+			zoomed = true;
+			return zoom(tm_node.parent, 450); }
 		else if (zoom_level == 1) 
 			return zoom(tm_node.parent, 450);
 		else
@@ -576,4 +576,10 @@ d3.csv("../data/nba.csv", function(error, data) {
 
 	draw_treemap(1);
   	
+	d3.select(window).on("click", function(e) {
+		if (zoom_level > 0) {
+			zoom_level = 2;
+			zoom(x_root, 450);
+		}
+	});
 });
