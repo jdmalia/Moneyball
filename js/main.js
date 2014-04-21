@@ -186,82 +186,82 @@ function draw_scatterplot() {
 	
 	// x-axis
 	sp_svg.append("g")
-	  .attr("class", "x axis")
-	  .attr("transform", "translate(0," + height + ")")
-	  .call(xAxis)
-	.append("text")
-	  .attr("class", "label")
-	  .attr("x", width)
-	  .attr("y", -6)
-	  .style("text-anchor", "end")
-	  .text("Team Salary ($ Million)");
+		.attr("class", "x axis")
+		.attr("transform", "translate(0," + height + ")")
+		.call(xAxis)
+	  .append("text")
+		.attr("class", "label")
+		.attr("x", width)
+		.attr("y", -6)
+		.style("text-anchor", "end")
+		.text("Team Salary ($ Million)");
 	
 	// y-axis
 	sp_svg.append("g")
-	  .attr("class", "y axis")
-	  .call(yAxis)
-	.append("text")
-	  .attr("class", "label")
-	  .attr("transform", "rotate(-90)")
-	  .attr("y", 6)
-	  .attr("dy", ".71em")
-	  .style("text-anchor", "end")
-	  .text("Wins");
+		.attr("class", "y axis")
+		.call(yAxis)
+	  .append("text")
+		.attr("class", "label")
+		.attr("transform", "rotate(-90)")
+		.attr("y", 6)
+		.attr("dy", ".71em")
+		.style("text-anchor", "end")
+		.text("Wins");
 	
 	// draw dots
 	sp_svg.selectAll(".dot")
-	  .data(nba_data)
-	.enter().append("circle")
-	  .attr("id", function(d) {return "sp"+d["Team"];})
-	  .attr("class", "dot")
-	  .attr("r", function(d) {
+		.data(nba_data)
+	  .enter().append("circle")
+		.attr("id", function(d) {return "sp"+d["Team"];})
+		.attr("class", "dot")
+		.attr("r", function(d) {
 		  return radii[d[season+"PO"]];
 		})
-	  .attr("cx", xMap)
-	  .attr("cy", yMap)
-	  .style("fill", function(d) { return color(cValue(d));}) 
-	  .style("stroke-width", function(d) { 
-	  		return border_weights[d[season+"PO"]];
-	  	})
-	  .style("stroke-dasharray", function(d) {
+		.attr("cx", xMap)
+		.attr("cy", yMap)
+		.style("fill", function(d) { return color(cValue(d));}) 
+		.style("stroke-width", function(d) { 
+			return border_weights[d[season+"PO"]];
+		})
+		.style("stroke-dasharray", function(d) {
 		  return dasharrays[d[season+"PO"]]; 
-	  })
-	  .on("mouseover", function(d) { details_on_demand(d); })
-	  .on("mouseout", function(d) { details_off(d); })
-	  .on("click", function(d) { 
-	    var tm_node = node_map[d.Team];
-	    if(zoom_level == 0) {
-		    zoom_level = 1;
-			zoomed = true;
-			return zoom(tm_node.parent, 450); }
-		else if (zoom_level == 1) 
-			return zoom(tm_node.parent, 450);
-		else
-			return zoom(x_root, 450);
-	  });
+		})
+		.on("mouseover", function(d) { details_on_demand(d); })
+		.on("mouseout", function(d) { details_off(d); })
+		.on("click", function(d) { 
+			var tm_node = node_map[d.Team];
+			if(zoom_level == 0) {
+				zoom_level = 1;
+				zoomed = true;
+				return zoom(tm_node.parent, 450); }
+			else if (zoom_level == 1) 
+				return zoom(tm_node.parent, 450);
+			else
+				return zoom(x_root, 450);
+		});
 	  
 	// draw legend
 	var legend = sp_svg.selectAll(".legend")
-	  .data(color.domain())
-	.enter().append("g")
-	  .attr("id", function(d) {return "l"+d})
-	  .attr("class", "legend")
-	  .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+		.data(color.domain())
+	  .enter().append("g")
+		.attr("id", function(d) {return "l"+d})
+		.attr("class", "legend")
+		.attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 	
 	// draw legend colored rectangles
 	legend.append("rect")
-	  .attr("x", width - 18)
-	  .attr("width", 18)
-	  .attr("height", 18)
-	  .style("fill", color);
+		.attr("x", width - 18)
+		.attr("width", 18)
+		.attr("height", 18)
+		.style("fill", color);
 	
 	// draw legend text
 	legend.append("text")
-	  .attr("x", width - 24)
-	  .attr("y", 9)
-	  .attr("dy", ".35em")
-	  .style("text-anchor", "end")
-	  .text(function(d) { return d;})
+		.attr("x", width - 24)
+		.attr("y", 9)
+		.attr("dy", ".35em")
+		.style("text-anchor", "end")
+		.text(function(d) { return d;})
 }
 
 function draw_treemap(opacity) {
