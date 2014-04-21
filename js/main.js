@@ -277,38 +277,38 @@ function draw_treemap(opacity) {
 	var i=1;
 
 	var cell = tm_div.selectAll("g")
-	  .data(nodes)
-	.enter().append("svg:g")
-	  .attr("class", "cell")
-	  .attr("id", function(d) {i++; node_map[d.parent.name] = d; return ("node"+d.x+i+""+d.y+i);})
-	  .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
-	  .on("click", function(d) { 
-	  	switch(zoom_level) {
-			// Conference->Division
-			case 0:
-				return zoom(d.parent.parent, 450); 
-			// Division->Team
-			case 1:
-				return zoom(d.parent, 450);
-		    // Team->Conference
-			case 2:
-				return zoom(x_root, 450);
-		}
-	  });
+		.data(nodes)
+	  .enter().append("svg:g")
+		.attr("class", "cell")
+		.attr("id", function(d) {i++; node_map[d.parent.name] = d; return ("node"+d.x+i+""+d.y+i);})
+		.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+		.on("click", function(d) { 
+			switch(zoom_level) {
+				// Conference->Division
+				case 0:
+					return zoom(d.parent.parent, 450); 
+				// Division->Team
+				case 1:
+					return zoom(d.parent, 450);
+				// Team->Conference
+				case 2:
+					return zoom(x_root, 450);
+			}
+		});
 	  	
 	cell.append("svg:rect")
-	  .attr("width", function(d) { return d.dx - 1; })
-	  .attr("height", function(d) { return d.dy - 1; })
-	  .style("fill", function(d) { return color(d.Division); })
-	  .style("opacity", opacity) 
-	  .style("z-index", 5)
-	  .attr("id", function(d) {return "tm"+d.Team;})
-	  .on("mouseover", function(d) { 
-	  		this.style.opacity = 0.7;
-	  		details_on_demand(d); })
-	  .on("mouseout", function(d) { 
-	  		this.style.opacity = 1;
-	  		details_off(d); });
+		.attr("width", function(d) { return d.dx - 1; })
+		.attr("height", function(d) { return d.dy - 1; })
+		.style("fill", function(d) { return color(d.Division); })
+		.style("opacity", opacity) 
+		.style("z-index", 5)
+		.attr("id", function(d) {return "tm"+d.Team;})
+		.on("mouseover", function(d) { 
+			this.style.opacity = 0.7;
+			details_on_demand(d); })
+		.on("mouseout", function(d) { 
+			this.style.opacity = 1;
+			details_off(d); });
 	  
 	// Allows for word wrap (svg doesn't)
 	cell.append("foreignObject")
