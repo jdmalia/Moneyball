@@ -27,6 +27,7 @@ var radii = [small_dot, small_dot, big_dot];
 
 var playing = false;
 var zoomed = false;
+var zoom_level = 0;
 
 var season_num = 1;
 var season = sprintf("%02d-%02d ", season_num, season_num+1);
@@ -170,12 +171,13 @@ function update() {
 	
 	draw_treemap(0);	
 	
-	
 	if(zoomed) {
-		zoomed = false;
+		zoom_level--;
+		if(zoom_level == 0) zoomed = false;
 		zoom(zoomed_node, 0);
 	} else {
 		zoomed = true;
+		zoom_level = 2;
 		zoom(x_root, 0);
 	}
 }
@@ -315,8 +317,11 @@ function count(d) {
 }
 	  
 function zoom(d, duration) {
-	
-  zoomed = !zoomed;
+
+  zoom_level++;
+  zoom_level %= 3;
+  
+  if(zoom_level == 0 || zoom_level == 1) zoomed = !zoomed;
 	
   zoomed_node = d; 
   
@@ -349,7 +354,7 @@ function zoom(d, duration) {
   t.select(".textdiv")
 	  .style("opacity", 1);
 	    
-  if(zoomed) {
+  if(zoom_level == 1) {
 	  teams.forEach(function (team) {
 		  if(division_map[team] != d.name) {
 			  document.getElementById("sp"+team).setAttribute("opacity", .2);
@@ -359,6 +364,17 @@ function zoom(d, duration) {
 		  }
 	  });
   } 
+  else if (zoom_level == 2) {
+	  teams.forEach(function (team) {
+		 document.getElementById("sp"+team).setAttribute("r", small_dot); 
+		 document.getElementById("sp"+team).setAttribute("opacity", .2);
+		 document.getElementById("l"+division_map[team]).setAttribute("opacity", .2);
+		 if(team == d.name){
+			 document.getElementById("sp"+team).setAttribute("r", big_dot); 
+	  		 document.getElementById("sp"+team).setAttribute("opacity", 1);
+		 } 
+	  });
+  }
   else {
 	  teams.forEach(function (team) {
 			  document.getElementById("l"+division_map[team]).setAttribute("opacity", 1);
@@ -374,11 +390,11 @@ function zoom(d, duration) {
 
 function draw_treemap(opacity) {
 	// Converting the data
-	var preppedData = genJSON(nba_data, ['Conference', 'Division']);
+	var preppedData = genJSON(nba_data, ['Conference', 'Division','Team']);
 	x_root = preppedData;
 
 	var nodes = treemap.nodes(x_root)
-      .filter(function(d) { return !d.children; });
+      .filter(function(d) { return (!d.children ); });
 	  
 	nba_nodes = nodes;
 
@@ -387,7 +403,15 @@ function draw_treemap(opacity) {
 	.enter().append("svg:g")
 	  .attr("class", "cell")
 	  .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
-	  .on("click", function(d) { return zoom(x_node == d.parent ? x_root : d.parent, 450); })
+	  .on("click", function(d) { 
+	  	if(zoom_level == 0) 
+			return zoom(d.parent.parent, 450); 
+		else if (zoom_level == 1) 
+			return zoom(d.parent, 450);
+		else
+			return zoom(x_root, 450);
+	  });
+	  	
 	
 	cell.append("svg:rect")
 	  .attr("width", function(d) { return d.dx - 1; })
