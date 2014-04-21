@@ -24,7 +24,7 @@ var current_division, current_team,
 	slider_hit = false,
 	my_interval,
 	zoomed = false,
-    zoom_level = 0;
+	zoom_level = 0;
 
 /* Season info */
 var season_num = 1;
