@@ -11,14 +11,14 @@
 
 /* Sizing of scatterplot and treemap */
 var margin = {top: 40, right: 20, bottom: 30, left: 40},
-    w = width = 650.0 - margin.left - margin.right,
-    h = height = 500.0 - margin.top - margin.bottom,
+	w = width = 650.0 - margin.left - margin.right,
+	h = height = 500.0 - margin.top - margin.bottom,
 	x = d3.scale.linear().range([0, width]),
-    y = d3.scale.linear().range([0, height]);
+	y = d3.scale.linear().range([0, height]);
 
 /* Fill color for scatterplot and treemap using Colorbrewer */	
 var cValue = function(d) { return d.Division;},
-    color = d3.scale.ordinal().range(colorbrewer.Set3[6]);
+	color = d3.scale.ordinal().range(colorbrewer.Set3[6]);
 	
 /* Events and zooming */
 var current_division, current_team,
