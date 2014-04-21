@@ -61,6 +61,7 @@ sliders.each(function(){
 
 sliders.change(function(){
 	slider_hit = true;
+	
 	setTimeout(function(e) {
 		slider_hit = false;
 	}, 2000);
@@ -68,7 +69,7 @@ sliders.change(function(){
 	season = sprintf("%02d-%02d ", season_num, season_num+1);
 	season_heading = sprintf("20%02d-%02d ", season_num, season_num+1);
 	$("h3").text(season_heading + " Season");
-	$("h3").css("margin-left", 65 + (season_num - 1)*1175/11);
+	$("h3").css("left", this.getBoundingClientRect().left -110+ (season_num - 1)*1175/11);
 	if(season_num == 12) {
 		playing = false;
 		$("#play_button").text("Play");

@@ -48,6 +48,12 @@ h3 {
   shape-rendering: crispEdges;
 }
 
+.domain { 
+  fill: none; 
+  stroke: black; 
+  stroke-width: 1.5; 
+} 
+
 .dot {
   stroke: #000;
   position: relative;
