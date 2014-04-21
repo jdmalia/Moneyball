@@ -21,7 +21,7 @@ var big_dot = 10;
 var old_dot;
 
 /* Encoding for playoffs/champion */
-var border_weights = [0, 1, 4];
+var border_weights = [0.5, 2, 4];
 var dasharrays = ["0", "0", "3"];
 var radii = [small_dot, small_dot, big_dot];
 
