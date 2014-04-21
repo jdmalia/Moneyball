@@ -12,6 +12,7 @@ var x_root, x_node;
 var zoomed_node;
 var current_division;
 var current_team;
+var slider_hit = false;
 
 var nba_data, nba_nodes;
 var division_map = new Array();
@@ -59,6 +60,10 @@ sliders.each(function(){
 });
 
 sliders.change(function(){
+	slider_hit = true;
+	setTimeout(function(e) {
+		slider_hit = false;
+	}, 2000);
 	season_num = parseInt(sliders.val());
 	season = sprintf("%02d-%02d ", season_num, season_num+1);
 	season_heading = sprintf("20%02d-%02d ", season_num, season_num+1);
@@ -69,6 +74,7 @@ sliders.change(function(){
 		$("#play_button").text("Play");
 		clearInterval(my_interval);
 	}
+	
 	update();
 });
 
@@ -77,6 +83,7 @@ var my_interval;
 function play() {
 	if(!playing && season_num < 12) {
 		playing = true;
+		slider_hit = true;
 		my_interval = setInterval(function(){
 			season_num++;
 			$(".slider").val(""+season_num);
@@ -468,6 +475,13 @@ function draw_treemap(opacity) {
 			.attr("class","textdiv");
 }
 
+d3.select(window).on("click", function(e) {
+		if (zoom_level > 0  && !slider_hit) {
+			zoom_level = 2;
+			zoom(x_root, 450);
+		}
+	});
+
 // load data
 d3.csv("../data/nba.csv", function(error, data) {
 	
@@ -575,11 +589,5 @@ d3.csv("../data/nba.csv", function(error, data) {
 	  <!------------------------TREEMAP---------------------------->
 
 	draw_treemap(1);
-  	
-	d3.select(window).on("click", function(e) {
-		if (zoom_level > 0) {
-			zoom_level = 2;
-			zoom(x_root, 450);
-		}
-	});
+  
 });
