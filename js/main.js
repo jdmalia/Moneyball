@@ -20,6 +20,11 @@ var small_dot = 7;
 var big_dot = 10;
 var old_dot;
 
+/* Encoding for playoffs/champion */
+var border_weights = [0, 1, 4];
+var dasharrays = ["0", "0", "3"];
+var radii = [small_dot, small_dot, big_dot];
+
 var playing = false;
 var zoomed = false;
 
@@ -72,7 +77,7 @@ function play() {
 			season_num++;
 			$(".slider").val(""+season_num);
 			$(".slider").change();
-					},1500);
+					},700);
 		$("#play_button").text("Stop");
 	} else {
 		playing = false;
@@ -140,28 +145,19 @@ function update() {
 	
 	//Scatterplot
 	dots = svg.selectAll(".dot")
-	  .data(nba_data).transition(5000);
+	  .data(nba_data).transition(800);
 	  
 	dots
 		.attr("cx", xMap)
 		.attr("cy", yMap)
 		.attr("r", function(d) {
-		  if (d[season+"PO"] == 2) return big_dot;
-		  return small_dot;
+		  return radii[d[season+"PO"]];
 		})
 		.style("stroke-width", function(d) { 
-	  		switch (d[season+"PO"]){
-				case 0:
-					return 0;
-				case 1:
-					return 1.5;
-				case 2:
-					return 4;
-			}
+	  		return border_weights[d[season+"PO"]];
 	  	})
-		.style("stroke-dasharray", function(d) {
-		  if (d[season+"PO"] == 2) return "3";
-		  return 0;
+	  .style("stroke-dasharray", function(d) {
+		  return dasharrays[d[season+"PO"]]; 
 	  });
 	
 	$(".chart").remove();
@@ -481,25 +477,16 @@ d3.csv("../data/nba.csv", function(error, data) {
 	  .attr("id", function(d) {return "sp"+d["Team"];})
 	  .attr("class", "dot")
 	  .attr("r", function(d) {
-		  if (d[season+"PO"] == 2) return big_dot;
-		  return small_dot;
+		  return radii[d[season+"PO"]];
 		})
 	  .attr("cx", xMap)
 	  .attr("cy", yMap)
 	  .style("fill", function(d) { return color(cValue(d));}) 
 	  .style("stroke-width", function(d) { 
-	  		switch (d[season+"PO"]){
-				case 0:
-					return 0;
-				case 1:
-					return 1.5;
-				case 2:
-					return 4;
-			}
+	  		return border_weights[d[season+"PO"]];
 	  	})
 	  .style("stroke-dasharray", function(d) {
-		  if (d[season+"PO"] == 2) return "3";
-		  return 0;
+		  return dasharrays[d[season+"PO"]]; 
 	  })
 	  .on("mouseover", function(d) { details_on_demand(d); })
 	  .on("mouseout", function(d) { details_off(d); });
