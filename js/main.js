@@ -600,10 +600,10 @@ function zoom(d, duration) {
 	
 	// Fixes an error caused by changing season while zooming in.
 	if (!d.dx) {
-	  d.dx = 590;
-	  d.dy = 430;
-	  d.x = 0;
-	  d.y = 0;
+		d.dx = 590;
+		d.dy = 430;
+		d.x = 0;
+		d.y = 0;
 	}
 	
 	var kx = width / d.dx, ky = height / d.dy;
@@ -612,21 +612,21 @@ function zoom(d, duration) {
 	y.domain([d.y, d.y + d.dy]);
 	
 	var t = tm_div.selectAll("g.cell").transition()
-	  .duration(duration)
-	  .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
+		.duration(duration)
+		.attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
 	
 	t.select("rect")
-	  .attr("width", function(d) { return kx * d.dx - 1; })
-	  .attr("height", function(d) { return ky * d.dy - 1; })
-	  .style("opacity", 1)
-	  .style("fill", function(d) { return ( zoomed ?   wl_color(d) : color(d.Division) ) });
+		.attr("width", function(d) { return kx * d.dx - 1; })
+		.attr("height", function(d) { return ky * d.dy - 1; })
+		.style("opacity", 1)
+		.style("fill", function(d) { return ( zoomed ?   wl_color(d) : color(d.Division) ) });
 	  
 	t.select("text")
-	  .attr("x", function(d) { return 5 })
-	  .attr("y", function(d) { return 10; })
+		.attr("x", function(d) { return 5 })
+		.attr("y", function(d) { return 10; });
 			
 	t.select(".textdiv")
-	  .style("opacity", 1);
+		.style("opacity", 1);
 		
 	switch(zoom_level) {
 		
@@ -653,7 +653,7 @@ function zoom(d, duration) {
 			});
 			break;
 		
-		// Teamå
+		// Team
 		case 2:
 			current_team = d.name;
 			teams.forEach(function (team) {
