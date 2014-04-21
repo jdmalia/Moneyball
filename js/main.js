@@ -358,18 +358,12 @@ function update() {
 	
 	// SCATTERPLOT
 	dots = sp_svg.selectAll(".dot")
-	    .data(nba_data).transition(400)
+		.data(nba_data).transition(400)
 		.attr("cx", xMap)
 		.attr("cy", yMap)
-		.attr("r", function(d) {
-		  return radii[d[season+"PO"]];
-		})
-		.style("stroke-width", function(d) { 
-			return border_weights[d[season+"PO"]];
-		})
-	   .style("stroke-dasharray", function(d) {
-		  return dasharrays[d[season+"PO"]]; 
-	    });
+		.attr("r", function(d) { return radii[d[season+"PO"]];})
+		.style("stroke-width", function(d) { return border_weights[d[season+"PO"]];})
+		.style("stroke-dasharray", function(d) { return dasharrays[d[season+"PO"]];});
 	
 	// TREEMAP
 	// Delete the old treemap.
@@ -377,14 +371,14 @@ function update() {
 	
 	// Create the spot for the new treemap.
 	tm_div = d3.select("#tm_vis").append("div")
-    	.attr("class", "chart")
-    	.style("width", (width + margin.left + margin.right) + "px")
-    	.style("height", (height + margin.top + margin.bottom) + "px")
-  	.append("svg:svg")
-    	.style("width", (width) + "px")
-    	.style("height", (height) + "px")
-  	.append("svg:g")
-    	.attr("transform", "translate(.5,.5)");
+		.attr("class", "chart")
+		.style("width", (width + margin.left + margin.right) + "px")
+		.style("height", (height + margin.top + margin.bottom) + "px")
+	  .append("svg:svg")
+		.style("width", (width) + "px")
+		.style("height", (height) + "px")
+	  .append("svg:g")
+		.attr("transform", "translate(.5,.5)");
 	
 	// Draw an invisible map (opacity=0)
 	draw_treemap(0);	
