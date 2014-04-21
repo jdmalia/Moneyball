@@ -154,24 +154,24 @@ function init() {
 	  
 		<!----------------------SCATTERPLOT-------------------------->
 		sp_svg = d3.select("#sp_vis").append("svg")
-	 		.style("float", "left")
-     		.attr("width", width + margin.left + margin.right)
-     		.attr("height", height + margin.top + margin.bottom)
- 		  .append("g")
-     		.attr("transform", "translate(" + margin.left + "," + (margin.top-20) + ")");
+			.style("float", "left")
+			.attr("width", width + margin.left + margin.right)
+			.attr("height", height + margin.top + margin.bottom)
+		  .append("g")
+			.attr("transform", "translate(" + margin.left + "," + (margin.top-20) + ")");
 			
 		draw_scatterplot();
 		  
 		<!------------------------TREEMAP---------------------------->
 		tm_div = d3.select("#tm_vis").append("div")
-    		.attr("class", "chart")
-    		.style("width", (width + margin.left + margin.right) + "px")
-    		.style("height", (height + margin.top + margin.bottom) + "px")
-  		 .append("svg:svg")
-    		.style("width", (width) + "px")
-    		.style("height", (height) + "px")
-  		 .append("svg:g")
-    		.attr("transform", "translate(.5,.5)");
+			.attr("class", "chart")
+			.style("width", (width + margin.left + margin.right) + "px")
+			.style("height", (height + margin.top + margin.bottom) + "px")
+		  .append("svg:svg")
+			.style("width", (width) + "px")
+			.style("height", (height) + "px")
+		  .append("svg:g")
+			.attr("transform", "translate(.5,.5)");
 
 		draw_treemap(1);
 	  
