@@ -637,17 +637,17 @@ function zoom(d, duration) {
 		
 		// League
 		case 0:
-		  teams.forEach(function (team) {
+			teams.forEach(function (team) {
 				  document.getElementById("l"+division_map[team]).setAttribute("opacity", 1);
 				  document.getElementById("sp"+team).setAttribute("opacity", 1);
 				  document.getElementById("sp"+team).setAttribute("r", small_dot);
-		  });
-		  break;
+			});
+			break;
 		  
 		// Division
 		case 1:
-		  current_division = d.name;
-		  teams.forEach(function (team) {
+			current_division = d.name;
+			teams.forEach(function (team) {
 			  if(division_map[team] != d.name) {
 				  document.getElementById("sp"+team).setAttribute("opacity", .1);
 				  document.getElementById("l"+division_map[team]).setAttribute("opacity", .1);
@@ -655,22 +655,22 @@ function zoom(d, duration) {
 				  document.getElementById("sp"+team).setAttribute("r",small_dot);
 				  document.getElementById("sp"+team).setAttribute("opacity", 1);
 			  }
-		  });
-			  break;
+			});
+			break;
 		
-		// Team
+		// Teamå
 		case 2:
-		  current_team = d.name;
-		  teams.forEach(function (team) {
-			 document.getElementById("sp"+team).setAttribute("r", small_dot); 
-			 document.getElementById("sp"+team).setAttribute("opacity", .1);
-			 document.getElementById("l"+division_map[team]).setAttribute("opacity", .1);
-			 if(team == d.name){
-				 document.getElementById("sp"+team).setAttribute("r", small_dot); 
-				 document.getElementById("sp"+team).setAttribute("opacity", 1);
-			 } 
-		  });
-		  break;
+			current_team = d.name;
+			teams.forEach(function (team) {
+				document.getElementById("sp"+team).setAttribute("r", small_dot); 
+				document.getElementById("sp"+team).setAttribute("opacity", .1);
+				document.getElementById("l"+division_map[team]).setAttribute("opacity", .1);
+				if(team == d.name){
+					 document.getElementById("sp"+team).setAttribute("r", small_dot); 
+					 document.getElementById("sp"+team).setAttribute("opacity", 1);
+				} 
+			});
+			break;
 	
 	}
 	
