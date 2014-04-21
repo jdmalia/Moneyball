@@ -411,7 +411,7 @@ function details_on_demand(d) {
 	tm_node.style.opacity = ".7";
 	
 	
-    teams.forEach(function(team) {
+	teams.forEach(function(team) {
 		document.getElementById("sp"+team).setAttribute("opacity", .1);
 	});
 	sp_dot.setAttribute("opacity", 1);
@@ -449,14 +449,14 @@ function details_off(d) {
    switch(zoom_level) {
 	   // Conference - make everyone visible
 	   case 0: 
-		   teams.forEach(function(team) {
+			teams.forEach(function(team) {
 				document.getElementById("sp"+team).setAttribute("opacity", 1);
 			});
 			break;
 			
 	   // Division - make division's teams visible
 	   case 1: 
-		   teams.forEach(function(team) {
+			teams.forEach(function(team) {
 				if(division_map[team] == current_division) 
 					document.getElementById("sp"+team).setAttribute("opacity", 1);
 			});
@@ -464,25 +464,24 @@ function details_off(d) {
 			
 	   // Team - make focused team visible
 	   case 2:
-		   teams.forEach(function(team) {
+			teams.forEach(function(team) {
 				document.getElementById("sp"+team).setAttribute("opacity", .1);
-		   });
-		   document.getElementById("sp"+current_team).setAttribute("opacity", 1);
-	   	   break;
-   }
-   
-   // Reset dot
-   sp_dot.setAttribute("r", old_dot);
-   sp_dot.setAttribute("opacity", old_opacity);
-  
-   // Reset node
-   tm_node.style.opacity = "1";
-   
-   //Disappear tooltip
-   tooltip.transition()
-	   .duration(100)
-	   .style("opacity", 0);
-	   
+			});
+			document.getElementById("sp"+current_team).setAttribute("opacity", 1);
+			break;
+	}
+	
+	// Reset dot
+	sp_dot.setAttribute("r", old_dot);
+	sp_dot.setAttribute("opacity", old_opacity);
+	
+	// Reset node
+	tm_node.style.opacity = "1";
+	
+	//Disappear tooltip
+	tooltip.transition()
+		.duration(100)
+		.style("opacity", 0);  
 }
 
 /* Converts CSV data to JSON format for treemap */
