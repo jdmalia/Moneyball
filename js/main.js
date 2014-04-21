@@ -2,7 +2,7 @@
 	Scatterplot: http://bl.ocks.org/mbostock/3887118 
 	Zoomable treemap: http://mbostock.github.io/d3/talk/20111018/treemap.html
 	Colors palette: http://colorbrewer2.org/
-    CSV to flare JSON: http://www.delimited.io/blog/2013/11/2/creating-nested-json-for-d3
+	CSV to flare JSON: http://www.delimited.io/blog/2013/11/2/creating-nested-json-for-d3
 	HSV to RGB/HEX:  http://stackoverflow.com/questions/17242144/javascript-convert-hsb-hsv-color-to-rgb-accurately
 	Tooltip:  http://www.d3noob.org/2013/01/adding-tooltips-to-d3js-graph.html
 */
