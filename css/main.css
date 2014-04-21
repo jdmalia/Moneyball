@@ -1,3 +1,5 @@
+/* ELEMENTS */
+
 body {
   font: 12px sans-serif;
 }
@@ -14,6 +16,7 @@ h2 {
   margin-top: 10px;
 }
 
+/* h3 holds the label for the slider */
 h3 {
   position: relative;
   text-align: left;
@@ -23,24 +26,13 @@ h3 {
   top: 570px;
 }
 
-#play_button {
-  position: relative;
-  text-align: left;
-  float: left;
-  font-size: 18px;
-  margin-top: 26px;
-  margin-left: 5px;
+text {
+	font-size: 11px;
 }
 
-.arrow-left {
-	width: 0; 
-	height: 0; 
-	border-top: 8px solid transparent;
-	border-bottom: 8px solid transparent; 
-	border-right:10px solid black; 
-	z-index:  90000;
-}
+/* CLASSES */
 
+/* Scatterplot axes */
 .axis path,
 .axis line {
   fill: none;
@@ -48,47 +40,43 @@ h3 {
   shape-rendering: crispEdges;
 }
 
+/* Axis lines */
 .domain { 
   fill: none; 
   stroke: black; 
   stroke-width: 1.5; 
 } 
 
+/* Axis labels */
+.label {
+	font: 12px sans-serif;
+}
+
+/* Scatterplot data dots */
 .dot {
   stroke: #000;
   position: relative;
   z-index: 0;
 }
-
 .dot:hover {
 	display: block;
 	z-index: 9999;
 }
 
+/* Holds the treemap  */
 .chart {
-	display: block;
-	margin: auto;
-	margin-top: 40px;
-}
+	margin-top: 20px;
+} 
 
-text {
-	font-size: 11px;
-}
-
+/* Treemap labels */
 .textdiv {
 	font: 11px sans-serif;
 	text-align: left;
 }
 
+/* Treemap node containers */
 rect {
 	fill: none;
-}
-
-.tooltip {
-  position: absolute;
-  width: 200px;
-  height: 28px;
-  pointer-events: none;
 }
 
 .node {
@@ -99,6 +87,16 @@ rect {
   position: absolute;
   text-indent: 2px;
 }
+
+.tooltip {
+  position: absolute;
+  width: 200px;
+  height: 28px;
+  pointer-events: none;
+}
+
+
+/* IDs */
 
 #viz_container {
 	position: relative;
@@ -118,6 +116,15 @@ rect {
 	margin-right: 10px;
 }
 
+#play_button {
+  position: relative;
+  text-align: left;
+  float: left;
+  font-size: 18px;
+  margin-top: 46px;
+  margin-left: 5px;
+}
+
 #season_slider {
 	position:  relative;
 	top: 570px;
@@ -126,6 +133,3 @@ rect {
 	margin-right:auto;
 }
 
-.label {
-	font: 12px sans-serif;
-}
