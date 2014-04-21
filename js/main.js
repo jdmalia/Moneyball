@@ -7,6 +7,8 @@
 	Tooltip:  http://www.d3noob.org/2013/01/adding-tooltips-to-d3js-graph.html
 */
 
+/*************************GLOBALS*****************************/
+
 /* Sizing of scatterplot and treemap */
 var margin = {top: 40, right: 20, bottom: 30, left: 40},
     w = width = 650.0 - margin.left - margin.right,
@@ -35,7 +37,6 @@ var season_heading = sprintf("20%02d-%02d ", season_num, season_num+1);
 var division_map = new Array();
 var teams = new Array();
 
-
 /* SCATTERPLOT SVG */
 var sp_svg;
 
@@ -56,7 +57,6 @@ var sp_svg;
 		yMap = function(d) { return yScale(yValue(d));}, 
 		yAxis = d3.svg.axis().scale(yScale).orient("left");
 
-
 /* TREEMAP DIV */
 var tm_div;
 	
@@ -69,7 +69,6 @@ var tm_div;
 	var x_root, x_node, zoomed_node, 
 		nba_dta, nba_nodes,
 		node_map = new Array();
-		
 
 /* Tooltip */
 var tooltip = d3.select("body").append("div")
@@ -79,6 +78,8 @@ var tooltip = d3.select("body").append("div")
 /* Currency format */
 var curr_fmt = d3.format("$,.0f");
 
+
+/*************************FUNCTIONS*****************************/
 function init() {
 	
 	/* Slider label */
