@@ -235,6 +235,57 @@ function draw_scatterplot() {
 			else
 				return zoom(x_root, 450);
 		});
+		
+	sp_svg.append("circle")
+		.attr("class", "dot")
+		.attr("r", small_dot)
+		.attr("cx", 5)
+		.attr("cy", height+40)
+		.style("fill", "#BBBBBB") 
+		.style("stroke-width", border_weights[0])
+		.style("stroke-dasharray", dasharrays[0])
+		
+	sp_svg.append("circle")
+		.attr("class", "dot")
+		.attr("r", small_dot)
+		.attr("cx", 165)
+		.attr("cy", height+40)
+		.style("fill", "#BBBBBB") 
+		.style("stroke-width", border_weights[1])
+		.style("stroke-dasharray", dasharrays[1])
+		
+	sp_svg.append("circle")
+		.attr("class", "dot")
+		.attr("r", small_dot)
+		.attr("cx", 305)
+		.attr("cy", height+40)
+		.style("fill", "#BBBBBB") 
+		.style("stroke-width", border_weights[2])
+		.style("stroke-dasharray", dasharrays[2])
+		
+	sp_svg.append("text")
+	    .attr("x", 115)
+		.attr("y", height+40)
+		.attr("dy", ".35em")
+		.style("font-size", "12px")
+		.style("text-anchor", "end")
+		.text("Non-playoff team")
+		
+	  sp_svg.append("text")
+	    .attr("x", 250)
+		.attr("y", height+40)
+		.attr("dy", ".35em")
+		.style("font-size", "12px")
+		.style("text-anchor", "end")
+		.text("Playoff team")
+	
+	  sp_svg.append("text")
+	    .attr("x", 435)
+		.attr("y", height+40)
+		.attr("dy", ".35em")
+		.style("font-size", "12px")
+		.style("text-anchor", "end")
+		.text("Championship team")
 	  
 	// draw legend
 	var legend = sp_svg.selectAll(".legend")
