@@ -8,6 +8,9 @@
 */
 
 /*************************GLOBALS*****************************/
+var first_season = 1;
+var num_seasons = 13;
+var last_season = first_season + num_seasons - 1;
 
 /* Sizing of scatterplot and treemap */
 var margin = {top: 40, right: 20, bottom: 30, left: 40},
@@ -29,7 +32,7 @@ var current_division, current_team,
 	zoom_level = 0;
 
 /* Season info */
-var season_num = 1;
+var season_num = first_season;
 var season = sprintf("%02d-%02d ", season_num, season_num+1);
 var season_heading = sprintf("20%02d-%02d ", season_num, season_num+1);
 
@@ -89,8 +92,8 @@ function init() {
 	slider = $(".slider");
 	
 	slider.noUiSlider({
-		start: [ 1 ],
-		range: {'min': 1, 'max': 12},
+		start: [ first_season ],
+		range: {'min': first_season, 'max': last_season},
 		step: 1
 	});
 	
@@ -106,8 +109,8 @@ function init() {
 		season = sprintf("%02d-%02d ", season_num, season_num+1);
 		season_heading = sprintf("20%02d-%02d ", season_num, season_num+1);
 		$("h3").text(season_heading + " Season");
-		$("h3").css("left", this.getBoundingClientRect().left -110+ (season_num - 1)*1175/11);
-		if(season_num == 12) {
+		$("h3").css("left", this.getBoundingClientRect().left -110+ (season_num - 1)*1175/(num_seasons-1));
+		if(season_num == last_season) {
 			playing = false;
 			$("#play_button").text("Play");
 			clearInterval(my_interval);
@@ -137,7 +140,7 @@ function init() {
 		data.forEach(function(d) {
 			teams.push(d.Team);
 			division_map[d.Team] = d.Division;
-			for (i = 1; i < 13; ++i) {
+			for (i = first_season; i <= last_season; ++i) {
 			  salary = sprintf("%02d-%02d Salary", i, i+1);
 			  win = sprintf("%02d-%02d Win", i, i+1);
 			  loss = sprintf("%02d-%02d Loss", i, i+1);
@@ -378,8 +381,8 @@ It works by setting up an interval that updates and changes the slider every 2 s
 */
 function play() {
 	
-	if(!playing && season_num <= 12) {
-		if (season_num == 12) season_num = 0;  // start back at first season if user clicks play at season 12
+	if(!playing && season_num <= last_season) {
+		if (season_num == last_season) season_num = first_season-1;  // start back at first season if user clicks play at last season
 		playing = true;
 		slider_hit = true;
 		my_interval = setInterval(function(){
