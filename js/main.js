@@ -536,8 +536,8 @@ function details_on_demand(d) {
 	      "<img src='" + logos[d.Team] + "' width='50' height='50' style='float: left; padding-right: 10px; vertical-align: middle'>" +
 		  "<b>" + d["Team"] + "<b><br/><br/>\t  Salary: <b>" + curr_fmt(xValue(d)*1000000) + "</b><br/>\t  Wins: <b>" + yValue(d) + 
 		  "</b>; Losses: <b>" + d[season+"Loss"] + "</b>")
-	   .style("left",  d["Team"] ? (d3.event.x - 90) + "px": null)
-	   .style("top", d["Team"] ? (d3.event.y - 70) + "px": null)
+	   .style("left",  d["Team"] ? (d3.event.x + document.body.scrollLeft - 90) + "px": null)
+	   .style("top", d["Team"] ? (d3.event.y +  document.body.scrollTop - 70) + "px": null)
 	   .style("padding", "5px")
 	   .style("padding-left", "10px")
 	   .style("font-size", "11px");
