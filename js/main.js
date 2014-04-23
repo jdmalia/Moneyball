@@ -406,7 +406,7 @@ function draw_treemap(opacity) {
 		.attr("dy", ".35em")
 	  .html("Wins > Losses (W/L Ratio)")
 		
-	// Wins > Losses
+	// Losses > Wins
 	win_loss_legend.append("svg:rect")
 		.attr("width", 15)
 		.attr("height", 15)
