@@ -239,6 +239,8 @@ function draw_scatterplot() {
 				return zoom(x_root, 450);
 		});
 		
+	/***DOT BORDER LEGEND***/
+	// Non-playoff team
 	sp_svg.append("circle")
 		.attr("class", "dot")
 		.attr("r", small_dot)
@@ -246,25 +248,7 @@ function draw_scatterplot() {
 		.attr("cy", height+40)
 		.style("fill", "#BBBBBB") 
 		.style("stroke-width", border_weights[0])
-		.style("stroke-dasharray", dasharrays[0])
-		
-	sp_svg.append("circle")
-		.attr("class", "dot")
-		.attr("r", small_dot)
-		.attr("cx", 165)
-		.attr("cy", height+40)
-		.style("fill", "#BBBBBB") 
-		.style("stroke-width", border_weights[1])
-		.style("stroke-dasharray", dasharrays[1])
-		
-	sp_svg.append("circle")
-		.attr("class", "dot")
-		.attr("r", small_dot)
-		.attr("cx", 305)
-		.attr("cy", height+40)
-		.style("fill", "#BBBBBB") 
-		.style("stroke-width", border_weights[2])
-		.style("stroke-dasharray", dasharrays[2])
+		.style("stroke-dasharray", dasharrays[0]);
 		
 	sp_svg.append("text")
 	    .attr("x", 115)
@@ -272,25 +256,45 @@ function draw_scatterplot() {
 		.attr("dy", ".35em")
 		.style("font-size", "12px")
 		.style("text-anchor", "end")
-		.text("Non-playoff team")
-		
-	  sp_svg.append("text")
+		.text("Non-playoff team");
+	
+	// Playoff team
+	sp_svg.append("circle")
+		.attr("class", "dot")
+		.attr("r", small_dot)
+		.attr("cx", 165)
+		.attr("cy", height+40)
+		.style("fill", "#BBBBBB") 
+		.style("stroke-width", border_weights[1])
+		.style("stroke-dasharray", dasharrays[1]);
+	
+	sp_svg.append("text")
 	    .attr("x", 250)
 		.attr("y", height+40)
 		.attr("dy", ".35em")
 		.style("font-size", "12px")
 		.style("text-anchor", "end")
-		.text("Playoff team")
+		.text("Playoff team");
 	
+	// Championship team
+	sp_svg.append("circle")
+		.attr("class", "dot")
+		.attr("r", small_dot)
+		.attr("cx", 305)
+		.attr("cy", height+40)
+		.style("fill", "#BBBBBB") 
+		.style("stroke-width", border_weights[2])
+		.style("stroke-dasharray", dasharrays[2]);
+		
 	  sp_svg.append("text")
 	    .attr("x", 435)
 		.attr("y", height+40)
 		.attr("dy", ".35em")
 		.style("font-size", "12px")
 		.style("text-anchor", "end")
-		.text("Championship team")
+		.text("Championship team");
 	  
-	// draw legend
+	/***DIVSION COLOR LEGEND***/
 	var legend = sp_svg.selectAll(".legend")
 		.data(color.domain())
 	  .enter().append("g")
@@ -373,6 +377,54 @@ function draw_treemap(opacity) {
 		.style("opacity", opacity)
 		.style("z-index", 6)
 		.attr("class","textdiv");
+	
+	/***WIN LOSS LEGEND***/	
+	var win_loss_legend = d3.select(".chart").append("svg")
+		.attr("id", "win_loss_legend")
+		.attr("width", width)
+		.attr("height", 20)
+		.style("float", "left")
+		.style("margin-left", "40")
+		.style("margin-top", "25")
+		.style("opacity", 0)
+	
+	// Wins > Losses
+	win_loss_legend.append("svg:rect")
+		.attr("width", 15)
+		.attr("height", 15)
+		.style("fill", "#88FF88")
+		.style("stroke-width", 1)
+		.style("stroke", "#000")
+		
+	 win_loss_legend.append("foreignObject")
+		.attr("x", 18)
+		.attr("y", 2)
+		.attr("dy", ".35em")
+		.attr("width", 155)
+		.attr("height", 20)
+	  .append("xhtml:div")
+		.attr("dy", ".35em")
+	  .html("Wins > Losses (W/L Ratio)")
+		
+	// Wins > Losses
+	win_loss_legend.append("svg:rect")
+		.attr("width", 15)
+		.attr("height", 15)
+		.attr("x", 220)
+		.attr("y", 0)
+		.style("fill", "#FF8888")
+		.style("stroke-width", 1)
+		.style("stroke", "#000")
+		
+	 win_loss_legend.append("foreignObject")
+		.attr("x", 238)
+		.attr("y", 2)
+		.attr("dy", ".35em")
+		.attr("width", 155)
+		.attr("height", 20)
+	  .append("xhtml:div")
+		.attr("dy", ".35em")
+	  .html("Losses > Wins (L/W Ratio)")
 }
 
 /*	
@@ -681,6 +733,7 @@ function zoom(d, duration) {
 		
 		// League
 		case 0:
+			d3.select("#win_loss_legend").style("opacity", 0);
 			teams.forEach(function (team) {
 				  document.getElementById("l"+division_map[team]).setAttribute("opacity", 1);
 				  document.getElementById("sp"+team).setAttribute("opacity", 1);
@@ -690,6 +743,7 @@ function zoom(d, duration) {
 		  
 		// Division
 		case 1:
+			d3.select("#win_loss_legend").style("opacity", 1);
 			current_division = d.name;
 			teams.forEach(function (team) {
 			  if(division_map[team] != d.name) {
@@ -704,6 +758,7 @@ function zoom(d, duration) {
 		
 		// Team
 		case 2:
+			d3.select("#win_loss_legend").style("opacity", 1);
 			current_team = d.name;
 			teams.forEach(function (team) {
 				document.getElementById("sp"+team).setAttribute("r", small_dot); 
