@@ -736,44 +736,44 @@ function zoom(d, duration) {
 		
 		// League
 		case 0:
-            $("#win_loss_legend").css("opacity", 0);
-            teams.forEach(function (team) {
-                $("#l"+division_map[team])
-                    .css("opacity", 1);
-                $("#sp"+team)
-                    .css("opacity", 1)
-                    .attr("r", small_dot);
-            });
-            break;
+                    $("#win_loss_legend").css("opacity", 0);
+                    teams.forEach(function (team) {
+                        $("#l"+division_map[team])
+                            .css("opacity", 1);
+                        $("#sp"+team)
+                            .css("opacity", 1)
+                            .attr("r", small_dot);
+                    });
+                    break;
 		  
 		// Division
 		case 1:
-            $("#win_loss_legend").css("opacity", 1);
-            current_division = d.name;
-            teams.forEach(function (team) {
-                $("#sp"+team).css("opacity", .1);
-                $("#l"+division_map[team]).css("opacity", .1);
-            });
-            $("#sp"+ d.name)
-                .attr("r",small_dot)
-                .css("opacity", 1);
-            break;
+                    $("#win_loss_legend").css("opacity", 1);
+                    current_division = d.name;
+                    teams.forEach(function (team) {
+                        $("#sp"+team).css("opacity", .1);
+                        $("#l"+division_map[team]).css("opacity", .1);
+                    });
+                    $("#sp"+ d.name)
+                        .attr("r",small_dot)
+                        .css("opacity", 1);
+                    break;
 		
 		// Team
 		case 2:
-            $("#win_loss_legend").css("opacity", 1);
-            current_team = d.name;
-            teams.forEach(function (team) {
-                $("#sp"+team)
-                    .attr("r", small_dot)
-                    .css("opacity", .1);
-                $("#l"+division_map[team])
-                    .css("opacity", .1);
-            });
-            $("#sp"+ d.name)
-                .attr("r", small_dot)
-                .css("opacity", 1);
-            break;
+                    $("#win_loss_legend").css("opacity", 1);
+                    current_team = d.name;
+                    teams.forEach(function (team) {
+                        $("#sp"+team)
+                            .attr("r", small_dot)
+                            .css("opacity", .1);
+                        $("#l"+division_map[team])
+                            .css("opacity", .1);
+                    });
+                    $("#sp"+ d.name)
+                        .attr("r", small_dot)
+                        .css("opacity", 1);
+                    break;
 	}
 	
 	x_node = d;
