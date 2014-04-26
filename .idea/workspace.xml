@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="06eedae7-e61d-4f7e-9b88-f2f53cd97ce8" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Screen Shot 2014-04-08 at 4.15.52 AM.png" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/main.js" afterPath="$PROJECT_DIR$/js/main.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="CS4460_Project.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -40,8 +39,8 @@
       <file leaf-file-name="main.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.6727273" vertical-offset="9060" max-vertical-offset="11850">
-              <caret line="567" column="82" selection-start-line="567" selection-start-column="82" selection-end-line="567" selection-end-column="82" />
+            <state vertical-scroll-proportion="0.25454545" vertical-offset="10530" max-vertical-offset="11850">
+              <caret line="716" column="4" selection-start-line="716" selection-start-column="4" selection-end-line="716" selection-end-column="4" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -101,24 +100,6 @@
         <subPane subId="Default">
           <PATH>
             <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="CS4460_Project">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="CS4460_Project">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="js">
               <option name="myItemId" value="" />
               <option name="myItemType" value="" />
             </PATH_ELEMENT>
@@ -256,8 +237,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/js/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.6727273" vertical-offset="9060" max-vertical-offset="11850">
-          <caret line="567" column="82" selection-start-line="567" selection-start-column="82" selection-end-line="567" selection-end-column="82" />
+        <state vertical-scroll-proportion="0.25454545" vertical-offset="10530" max-vertical-offset="11850">
+          <caret line="716" column="4" selection-start-line="716" selection-start-column="4" selection-end-line="716" selection-end-column="4" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
