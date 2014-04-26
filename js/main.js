@@ -153,7 +153,7 @@ function init() {
 		});
 	
 	  
-		<!----------------------SCATTERPLOT-------------------------->
+		//----------------------SCATTERPLOT--------------------------
 		sp_svg = d3.select("#sp_vis").append("svg")
 			.style("float", "left")
 			.attr("width", width + margin.left + margin.right)
@@ -163,7 +163,7 @@ function init() {
 			
 		draw_scatterplot();
 		  
-		<!------------------------TREEMAP---------------------------->
+		//------------------------TREEMAP----------------------------
 		tm_div = d3.select("#tm_vis").append("div")
 			.attr("class", "chart")
 			.style("width", (width + margin.left + margin.right) + "px")
@@ -439,8 +439,9 @@ function play() {
 		slider_hit = true;
 		my_interval = setInterval(function(){
 			season_num++;
-			$(".slider").val(""+season_num);
-			$(".slider").change();
+			$(".slider")
+                .val(""+season_num)
+			    .change();
 		}, 2000);
 		$("#play_button").text("Stop");
 	} 
@@ -548,7 +549,7 @@ Function called on mouseoff of SP dot or TM node.
 Resets what details_on_demand() did. 
 */
 function details_off(d) {
-	
+
 	var sp_dot = document.getElementById("sp"+d.Team);
 	var tm_node = document.getElementById("tm"+d.Team);
 
@@ -629,17 +630,19 @@ Encodes win/loss color:
    the more saturated the node  
 */
 function wl_color(d) {
-	var encoding;
+	var encoding, color_angle;
+
 	if (d[season+"Win"] > d[season+"Loss"]) {
+        color_angle = 120; // Green
 		encoding = d[season+"Win"]/d[season+"Loss"]*15;
 		if (encoding > 100) encoding = 100;
-		return hsv_to_hex(120, encoding, 100);
 	}
 	else {
+        color_angle = 0; // Red
 		encoding = d[season+"Loss"]/d[season+"Win"]*15;
 		if (encoding > 100) encoding = 100;
-		return hsv_to_hex(0, encoding, 100);
 	}
+    return hsv_to_hex(color_angle, encoding, 100);
 }
 
 /* Converts and HSV value to RGB so we can easily manipulate saturation for wl_color */
@@ -733,44 +736,44 @@ function zoom(d, duration) {
 		
 		// League
 		case 0:
-			d3.select("#win_loss_legend").style("opacity", 0);
+			$("#win_loss_legend").css("opacity", 0);
 			teams.forEach(function (team) {
-				  document.getElementById("l"+division_map[team]).setAttribute("opacity", 1);
-				  document.getElementById("sp"+team).setAttribute("opacity", 1);
-				  document.getElementById("sp"+team).setAttribute("r", small_dot);
+				  $("#l"+division_map[team])
+                      .css("opacity", 1);
+				  $("#sp"+team)
+                      .css("opacity", 1)
+                      .attr("r", small_dot);
 			});
 			break;
 		  
 		// Division
 		case 1:
-			d3.select("#win_loss_legend").style("opacity", 1);
+			$("#win_loss_legend").css("opacity", 1);
 			current_division = d.name;
-			teams.forEach(function (team) {
-			  if(division_map[team] != d.name) {
-				  document.getElementById("sp"+team).setAttribute("opacity", .1);
-				  document.getElementById("l"+division_map[team]).setAttribute("opacity", .1);
-			  } else {
-				  document.getElementById("sp"+team).setAttribute("r",small_dot);
-				  document.getElementById("sp"+team).setAttribute("opacity", 1);
-			  }
-			});
+            teams.forEach(function (team) {
+                $("#sp"+team).css("opacity", .1);
+                $("#l"+division_map[team]).css("opacity", .1);
+            });
+            $("#sp"+ d.name)
+                .attr("r",small_dot)
+                .css("opacity", 1);
 			break;
 		
 		// Team
 		case 2:
-			d3.select("#win_loss_legend").style("opacity", 1);
+			$("#win_loss_legend").css("opacity", 1);
 			current_team = d.name;
 			teams.forEach(function (team) {
-				document.getElementById("sp"+team).setAttribute("r", small_dot); 
-				document.getElementById("sp"+team).setAttribute("opacity", .1);
-				document.getElementById("l"+division_map[team]).setAttribute("opacity", .1);
-				if(team == d.name){
-					 document.getElementById("sp"+team).setAttribute("r", small_dot); 
-					 document.getElementById("sp"+team).setAttribute("opacity", 1);
-				} 
+				$("#sp"+team)
+                    .attr("r", small_dot)
+                    .css("opacity", .1);
+				$("#l"+division_map[team])
+                    .css("opacity", .1);
+
 			});
-			break;
-	
+            $("#sp"+ d.name)
+                .attr("r", small_dot)
+                .css("opacity", 1);
 	}
 	
 	x_node = d;
